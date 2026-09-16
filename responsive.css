@@ -1,0 +1,214 @@
+/* One responsive navigation and overflow layer for every page. */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+.menu-backdrop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header {
+        min-height: 64px;
+        padding: 14px clamp(16px, 5vw, 40px) !important;
+    }
+
+    .nav-wrapper,
+    .header > div:has(> #navbar) {
+        display: block !important;
+    }
+
+    #mobile {
+        display: flex !important;
+        align-items: center;
+        gap: 14px;
+    }
+
+    #bar {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        min-height: 42px;
+        cursor: pointer;
+        z-index: 1002;
+    }
+
+    #navbar {
+        position: fixed !important;
+        inset: 0 0 0 auto !important;
+        width: min(320px, 88vw) !important;
+        height: 100dvh !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 78px 22px 24px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 0 !important;
+        background: rgb(109, 214, 4) !important;
+        box-shadow: -14px 0 35px rgba(0, 0, 0, 0.28) !important;
+        transform: translateX(105%) !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease !important;
+        z-index: 1003 !important;
+        overflow-y: auto;
+    }
+
+    #navbar.active {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    #navbar li,
+    #navbar > a,
+    #navbar li a {
+        display: block !important;
+        width: 100% !important;
+        flex: 0 0 auto;
+    }
+
+    #navbar li {
+        padding: 0 !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    }
+
+    #navbar li a,
+    #navbar > a:not(#close) {
+        padding: 16px 4px !important;
+        color: rgb(250, 245, 245) !important;
+        font-size: 17px !important;
+        line-height: 1.3;
+    }
+
+    #navbar li a.active::after {
+        display: none !important;
+    }
+
+    #close {
+        display: flex !important;
+        position: absolute !important;
+        top: 20px !important;
+        right: 20px !important;
+        width: 40px !important;
+        height: 40px !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        color: rgb(250, 245, 245) !important;
+        font-size: 24px !important;
+        z-index: 1004;
+    }
+
+    .menu-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 15, 15, 0.58);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 1000;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    body.menu-open .menu-backdrop {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .hero,
+    .shop-hero,
+    .about-hero {
+        min-height: auto;
+    }
+}
+
+/* Provider bundle cards share one alignment system across MTN, ATgo, and Telecel. */
+.bundle-section .bundle-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch;
+    gap: 18px;
+}
+
+.bundle-section .bundle-card {
+    height: 100%;
+    min-width: 0;
+}
+
+.bundle-section .card-header {
+    min-height: 64px;
+    align-items: center;
+}
+
+.bundle-section .bundle-header-copy {
+    min-width: 0;
+}
+
+.bundle-section .bundle-label {
+    overflow-wrap: anywhere;
+}
+
+.bundle-section .card-pricing {
+    flex: 1 1 auto;
+}
+
+.bundle-section .card-actions {
+    margin-top: auto;
+}
+
+.bundle-section .btn-buy {
+    width: 100%;
+}
+
+@media (max-width: 1100px) {
+    .bundle-section .bundle-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .bundle-section .bundle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px;
+    }
+}
+
+@media (max-width: 520px) {
+    .bundle-section .bundle-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .header > a,
+    .logo-link {
+        font-size: 20px !important;
+    }
+
+    #navbar {
+        width: min(290px, 92vw) !important;
+    }
+}

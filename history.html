@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - WIMPS</title>
+    <link rel="stylesheet" href="history.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <section class="header">
+        <a href="home-page.html">WIMPS</a>
+        <div>
+            <ul id="navbar">
+                <li><a href="home-page.html">Home</a></li>
+                <li><a href="./history.html" class="active">History</a></li>
+                <li><a href="./mtn.html" class="rmv">Shop</a></li>
+                <li><a href="./about.html">About</a></li>
+                <li><a href="./account.html">Account</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="account.html" class="a">Account</a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="history-container">
+        <!-- Header Section -->
+        <div class="history-header">
+            <h1>Transaction History</h1>
+            <p>View all your purchases and transactions</p>
+        </div>
+
+        <!-- Check if logged in -->
+        <div id="not-logged-in" class="no-data-container" style="display: none;">
+            <div class="empty-state">
+                <i class="fas fa-sign-in-alt"></i>
+                <h2>Please Login</h2>
+                <p>You need to be logged in to view your transaction history.</p>
+                <a href="./login-page.html" class="btn btn-primary">Go to Login</a>
+            </div>
+        </div>
+
+        <!-- History Content -->
+        <div id="history-content" class="history-content">
+            <!-- Filters and Search -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search transactions...">
+                </div>
+
+                <div class="filter-group">
+                    <select id="filter-status" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+
+                    <select id="filter-type" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="atgo">ATgo</option>
+                        <option value="mtn">MTN</option>
+                        <option value="telecel">Telecel</option>
+                    </select>
+
+                    <select id="filter-period" class="filter-select">
+                        <option value="">All Time</option>
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <i class="fas fa-shopping-bag"></i>
+                    <div>
+                        <h4>Total Purchases</h4>
+                        <p id="total-purchases">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>Completed</h4>
+                        <p id="completed-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div>
+                        <h4>Total Spent</h4>
+                        <p id="total-spent">GHS 0.00</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4>Pending</h4>
+                        <p id="pending-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="transactions-wrapper">
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Bundle Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Transactions will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="no-data-container" style="display: none;">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h2>No Transactions Yet</h2>
+                        <p>You haven't made any purchases. Start shopping now!</p>
+                        <a href="./mtn.html" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="pagination" style="display: none;">
+                <button id="prev-btn" class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                <div id="page-numbers" class="page-numbers"></div>
+                <button id="next-btn" class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Details Modal -->
+    <div id="transaction-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Transaction Details</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>Transaction ID</label>
+                        <p id="modal-transaction-id">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Bundle Type</label>
+                        <p id="modal-bundle-type">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Amount</label>
+                        <p id="modal-amount">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Status</label>
+                        <p id="modal-status">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Date & Time</label>
+                        <p id="modal-date">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Bundle Details</label>
+                        <p id="modal-bundle-details">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Recipient/Account</label>
+                        <p id="modal-recipient">-</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Payment Method</label>
+                        <p id="modal-payment-method">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modal-close-btn">Close</button>
+                <button class="btn btn-primary" id="modal-download-btn">
+                    <i class="fas fa-download"></i> Download Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="">
+        <div class="col">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> 134 Melcom Road, Street 14, sokoban</p>
+            <p><strong>Phone:</strong> (+233) 597 532 120/(+233) 249 757 771</p>
+            <p><strong>Hours:</strong> 24/7, Mon - Sun</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Orders</a>
+            <a href="#">History</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+            </div>
+            <p>Secured Payment Gateways</p>
+        </div>
+    </footer>
+    <div class="cpr">
+        <p>&copy; 2026, Tech1 etc - HTML CSS JS Ecommerce Template</p>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="home-page.js"></script>
+    <script src="history.js"></script>
+    <script src="footer.js"></script>
+</body>
+</html>

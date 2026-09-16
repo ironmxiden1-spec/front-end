@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIMPS - Mobile Bundle Service</title>
+    <link rel="stylesheet" href="home-page.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <section class="header">
+        <a href="home-page.html" class="logo-link">
+            <span class="logo-text">WIMPS</span>
+        </a>
+
+        <div class="nav-wrapper">
+            <ul id="navbar">
+                <li><a href="home-page.html" class="active">Home</a></li>
+                <li><a href="./history.html">History</a></li>
+                <li><a href="./mtn.html">Shop</a></li>
+                <li><a href="./about.html">About</a></li>
+                <li><a href="./account.html">Account</a></li>
+                <li class="close-item"><a href="#" id="close"><i class="fas fa-times"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="mobile">
+            <a href="account.html" class="mobile-account">
+                <i class="fas fa-user"></i>
+            </a>
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <span class="highlight">WIMPS</span></h1>
+            <p>Your Ultimate Mobile Bundle Service</p>
+            <p class="subtitle">Get instant airtime, data bundles, and more from your favorite providers</p>
+            <a href="./mtn.html" class="btn btn-primary">Shop Now</a>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3>10K+</h3>
+                <p>Happy Customers</p>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>100K+</h3>
+                <p>Transactions</p>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>24/7</h3>
+                <p>Support</p>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>100%</h3>
+                <p>Secure</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundle Providers Section -->
+    <section class="bundles-section">
+        <div class="section-header">
+            <h2>Choose Your Provider</h2>
+            <p>Select from our trusted network partners</p>
+        </div>
+
+        <div class="bundles-grid">
+            <!-- MTN Bundle -->
+            <div class="bundle-card" onclick="window.location.href='./mtn.html'">
+                <div class="bundle-icon mtn-color">
+                    <i class="fas fa-signal"></i>
+                </div>
+                <h3>MTN</h3>
+                <p>Fast & Reliable Data</p>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> Affordable Plans</li>
+                    <li><i class="fas fa-check"></i> High Speed</li>
+                    <li><i class="fas fa-check"></i> Instant Activation</li>
+                </ul>
+                <button class="btn btn-outline">Explore</button>
+            </div>
+
+            <!-- ATgo Bundle -->
+            <div class="bundle-card" onclick="window.location.href='./atgo.html'">
+                <div class="bundle-icon atgo-color">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3>ATgo</h3>
+                <p>Quality Internet Service</p>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> Budget Friendly</li>
+                    <li><i class="fas fa-check"></i> Flexible Plans</li>
+                    <li><i class="fas fa-check"></i> 24/7 Active</li>
+                </ul>
+                <button class="btn btn-outline">Explore</button>
+            </div>
+
+            <!-- Telecel Bundle -->
+            <div class="bundle-card" onclick="window.location.href='./telecel.html'">
+                <div class="bundle-icon telecel-color">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <h3>Telecel</h3>
+                <p>Premium Coverage</p>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> Wide Coverage</li>
+                    <li><i class="fas fa-check"></i> Best Value</li>
+                    <li><i class="fas fa-check"></i> Stable Connection</li>
+                </ul>
+                <button class="btn btn-outline">Explore</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>Your Dashboard</h2>
+            <p>Quick access to your account information</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card balance">
+                <div class="card-header">
+                    <h4>Account Balance</h4>
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <p class="card-value" id="account-balance">GHS 0.00</p>
+                <a href="./account.html" class="card-link">View Account</a>
+            </div>
+
+            <div class="dashboard-card orders">
+                <div class="card-header">
+                    <h4>Recent Orders</h4>
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <p class="card-value" id="user-orders">0</p>
+                <a href="./history.html" class="card-link">View History</a>
+            </div>
+
+            <div class="dashboard-card transactions">
+                <div class="card-header">
+                    <h4>Transactions</h4>
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <p class="card-value" id="total-transactions">0</p>
+                <a href="./history.html" class="card-link">View Transactions</a>
+            </div>
+
+            <div class="dashboard-card deposit">
+                <div class="card-header">
+                    <h4>Deposit with Paystack</h4>
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <button type="button" id="home-deposit-paystack" class="btn btn-outline">Deposit</button>
+                <a href="./account.html" class="card-link">Open Account</a>
+            </div>
+
+            <div class="dashboard-card support">
+                <div class="card-header">
+                    <h4>24/7 Support</h4>
+                    <i class="fas fa-headset"></i>
+                </div>
+                <p class="card-contact">(+233) 597 532 120</p>
+                <a href="#" class="card-link">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Easy steps to get your bundle</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Select Bundle</h3>
+                <p>Choose your provider and data plan</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Enter Details</h3>
+                <p>Provide your phone number or account</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Pay Now</h3>
+                <p>Complete payment securely online</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Get Bundle</h3>
+                <p>Enjoy instant bundle activation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="newsletter-content">
+            <h2>Get Special Offers</h2>
+            <p>Subscribe to our newsletter for exclusive deals and updates</p>
+            <form class="newsletter-form" id="newsletter-form">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="col">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> 134 Melcom Road, Street 14, Sokoban</p>
+            <p><strong>Phone:</strong> (+233) 597 532 120 / (+233) 249 757 771</p>
+            <p><strong>Hours:</strong> 24/7, Mon - Sun</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="./about.html">About Us</a>
+            <a href="./history.html">Delivery Information</a>
+            <a href="./about.html">Privacy Policy</a>
+            <a href="./about.html">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="./login-page.html">Sign In</a>
+            <a href="./history.html">View Orders</a>
+            <a href="./history.html">History</a>
+            <a href="./account.html">My Account</a>
+            <a href="./about.html">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+            </div>
+            <p>Secured Payment Gateways</p>
+        </div>
+    </footer>
+
+    <div class="cpr">
+        <p>&copy; 2026, DEV.TEM.DEF - WIMPS Mobile Bundle Service</p>
+    </div>
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="./nav.js"></script>
+    <script src="./home-page.js?v=3"></script>
+    <script src="account.js"></script>
+    <script src="footer.js"></script>
+</body>
+</html>

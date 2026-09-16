@@ -1,0 +1,574 @@
+@import url(https://fonts.googleapis.com/css2?family=spartan:wght@100;200;300;400;500;600;700;800;900&display=swap);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'spartan', sans-serif;
+}
+
+@media (max-width: 768px) {
+    #navbar { position: fixed; top: 0; right: -100%; width: min(300px, 100vw); height: 100vh; display: none !important; flex-direction: column; align-items: stretch; gap: 0; padding: 80px 24px 24px; background-color: rgb(109, 214, 4); transition: right 0.25s ease; z-index: 999; }
+    #navbar.active { right: 0; display: flex !important; }
+    #navbar li { width: 100%; padding: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+    #navbar li a { display: block; width: 100%; padding: 16px 4px; color: rgb(250, 245, 245); font-size: 17px; }
+    #close { display: flex !important; position: absolute; top: 20px; right: 20px; }
+    #mobile { display: flex !important; align-items: center; gap: 15px; }
+}
+
+body {
+    width: 100%;
+    background-color: rgb(46, 40, 40);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+img[src=""], img:not([src]) {
+    display: none !important;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 80px;
+    background-color: rgb(109, 214, 4);
+    box-shadow: 0 5px 15px rgba(109, 214, 4, 0.445);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header a {
+    text-decoration: none;
+    color: rgb(250, 245, 245);
+    font-weight: 700;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header .logo {
+    width: 40px;
+    height: 40px;
+}
+
+#navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+#navbar li {
+    padding: 0 20px;
+}
+
+#navbar li a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(250, 245, 245);
+    transition: 0.3s ease;
+}
+
+#navbar li a:hover {
+    color: rgb(5, 95, 5);
+}
+
+#mobile {
+    display: none;
+}
+
+/* Auth Container */
+.auth-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, rgba(109, 214, 4, 0.1), rgba(46, 40, 40, 1));
+}
+
+.auth-box {
+    background: rgb(60, 55, 55);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+    padding: 50px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-box {
+    display: none;
+    animation: fadeIn 0.4s ease-in;
+}
+
+.form-box.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-box h2 {
+    text-align: center;
+    color: rgb(109, 214, 4);
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: rgb(200, 195, 195);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid rgb(100, 95, 95);
+    background-color: rgb(50, 45, 45);
+    color: rgb(200, 195, 195);
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: rgb(109, 214, 4);
+    box-shadow: 0 0 10px rgba(109, 214, 4, 0.3);
+}
+
+.form-group input::placeholder {
+    color: rgb(120, 115, 115);
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 44px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: rgb(180, 175, 175);
+    cursor: pointer;
+    padding: 6px;
+}
+
+.password-toggle:hover {
+    color: rgb(109, 214, 4);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 13px;
+}
+
+.remember-forgot label {
+    margin: 0;
+    color: rgb(180, 175, 175);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.remember-forgot label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.remember-forgot a {
+    color: rgb(109, 214, 4);
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.terms {
+    margin-bottom: 25px;
+}
+
+.terms label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgb(180, 175, 175);
+    font-size: 13px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.terms label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: rgb(109, 214, 4);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: rgb(90, 180, 0);
+    box-shadow: 0 5px 20px rgba(109, 214, 4, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 16px;
+    color: rgb(150, 145, 145);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: rgb(100, 95, 95);
+}
+
+.google-button {
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.google-fallback-button {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid rgb(120, 115, 115);
+    border-radius: 4px;
+    background: rgb(250, 245, 245);
+    color: rgb(45, 40, 40);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.google-fallback-button i {
+    margin-right: 8px;
+    color: rgb(66, 133, 244);
+}
+
+/* General Button Styles */
+.btn {
+    padding: 14px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-primary {
+    background-color: rgb(109, 214, 4);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: rgb(90, 180, 0);
+    box-shadow: 0 5px 20px rgba(109, 214, 4, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: rgb(100, 95, 95);
+    color: rgb(200, 195, 195);
+}
+
+.btn-secondary:hover {
+    background-color: rgb(120, 115, 115);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: rgb(109, 214, 4);
+    border: 2px solid rgb(109, 214, 4);
+}
+
+.btn-outline:hover {
+    background-color: rgb(109, 214, 4);
+    color: white;
+}
+
+.toggle-text {
+    text-align: center;
+    margin-top: 20px;
+    color: rgb(180, 175, 175);
+    font-size: 14px;
+}
+
+.toggle-text a {
+    color: rgb(109, 214, 4);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    background-color: rgb(30, 25, 25);
+    color: rgb(150, 145, 145);
+    padding: 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+footer .col {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+footer .col h4 {
+    color: rgb(200, 195, 195);
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+footer .col p {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+footer .col a {
+    text-decoration: none;
+    color: rgb(150, 145, 145);
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+footer .col a:hover {
+    color: rgb(109, 214, 4);
+}
+
+footer .col img {
+    width: 50px;
+    height: auto;
+}
+
+footer .follow .icon {
+    display: flex;
+    gap: 10px;
+}
+
+footer .follow .icon i {
+    color: rgb(100, 95, 95);
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+footer .follow .icon i:hover {
+    color: rgb(109, 214, 4);
+    transform: scale(1.2);
+}
+
+footer .row {
+    display: flex;
+    gap: 10px;
+}
+
+footer .row img {
+    width: 100px;
+    height: 50px;
+}
+
+.cpr {
+    text-align: center;
+    padding: 20px;
+    background-color: rgb(20, 15, 15);
+    color: rgb(150, 145, 145);
+    font-size: 13px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 40px;
+    }
+
+    #navbar {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 260px;
+        max-width: 260px;
+        background-color: rgb(109, 214, 4);
+        padding: 80px 20px 20px 20px;
+        gap: 20px;
+        transition: right 0.3s ease;
+        z-index: 999;
+    }
+
+    #navbar.active {
+        display: flex;
+        right: 0;
+    }
+
+    #navbar li {
+        width: 100%;
+        margin-bottom: 15px;
+        border-bottom: none;
+    }
+
+    #navbar li a {
+        display: block;
+        width: 100%;
+        color: rgb(250, 245, 245);
+        font-size: 18px;
+        padding: 10px 0;
+    }
+
+    #close {
+        display: flex !important;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: rgb(250, 245, 245);
+        font-size: 24px;
+    }
+
+    #mobile {
+        display: block;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #mobile .a {
+        text-decoration: none;
+        color: rgb(250, 245, 245);
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    #bar {
+        font-size: 24px;
+        color: rgb(250, 245, 245);
+        cursor: pointer;
+    }
+
+    .auth-container {
+        padding: 40px 20px;
+    }
+
+    .auth-box {
+        max-width: 100%;
+        padding: 30px 25px;
+    }
+
+    .form-box h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+        padding: 30px 20px;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 25px 15px;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .btn-submit {
+        padding: 12px;
+        font-size: 14px;
+    }
+}

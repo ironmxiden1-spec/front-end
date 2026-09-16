@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - WIMPS</title>
+    <link rel="stylesheet" href="account.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <section class="header">
+        <a href="home-page.html">WIMPS</a>
+        <div>
+            <ul id="navbar">
+                <li><a href="home-page.html">Home</a></li>
+                <li><a href="./history.html">History</a></li>
+                <li><a href="./mtn.html" class="rmv">Shop</a></li>
+                <li><a href="./about.html">About</a></li>
+                <li><a href="./account.html" class="active">Account</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="account.html" class="a">Account</a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="account-container">
+        <!-- Not Logged In View -->
+        <div id="not-logged-in" class="account-view">
+            <div class="not-logged-box">
+                <div class="icon-wrapper">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>You're Not Logged In</h2>
+                <p>Please log in or create an account to access your account information.</p>
+                <div class="button-group">
+                    <a href="./login-page.html?v=3#signup" class="btn btn-login">Go to Login</a>
+                    <a href="./login-page.html?v=3#signup" class="btn btn-signup">Create Account</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logged In View -->
+        <div id="logged-in" class="account-view" style="display: none;">
+            <div class="account-content">
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <h2>My Account</h2>
+                    </div>
+
+                    <!-- Profile Picture -->
+                    <div class="profile-picture-box">
+                        <div class="picture-container" id="picture-container">
+                            <div class="profile-picture" id="profile-picture" aria-label="Profile picture">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="upload-overlay">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="profile-upload" accept="image/*" style="display: none;">
+                        <button class="btn-upload" id="upload-btn">Upload Photo</button>
+                        <p class="upload-hint">Click on the image or button to upload a profile picture</p>
+                    </div>
+
+                    <!-- Account Information -->
+                    <div class="account-info">
+                        <div class="info-group">
+                            <label>Full Name</label>
+                            <input type="text" id="fullname" disabled class="info-input">
+                        </div>
+
+                        <div class="info-group">
+                            <label>Email Address</label>
+                            <input type="email" id="email" disabled class="info-input">
+                        </div>
+
+                        <div class="info-group">
+                            <label>Member Since</label>
+                            <input type="text" id="member-since" disabled class="info-input">
+                        </div>
+
+                        <div class="info-group">
+                            <label>Account Status</label>
+                            <div class="status-badge active">
+                                <span class="status-dot"></span>
+                                Active
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Stats -->
+                    <div class="account-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-shopping-cart"></i>
+                            <div>
+                                <h4>Total Orders</h4>
+                                <p id="total-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-history"></i>
+                            <div>
+                                <h4>Transactions</h4>
+                                <p id="total-transactions">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-wallet"></i>
+                            <div>
+                                <h4>Account Balance</h4>
+                                <p id="account-balance">GHS 0.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="account-deposit">
+                        <div class="deposit-card">
+                            <div class="deposit-card-header">
+                                <div>
+                                    <h2>Deposit with Paystack</h2>
+                                    <p>Add funds to your WIMPS wallet from your account page.</p>
+                                </div>
+                                <span class="badge">Wallet Top Up</span>
+                            </div>
+                            <div class="deposit-form">
+                                <label for="deposit-amount">Deposit Amount (GHS)</label>
+                                <input type="number" id="deposit-amount" min="10" step="0.01" placeholder="Enter amount" required>
+                                <div class="deposit-actions">
+                                    <button type="button" id="account-deposit-paystack" class="btn btn-outline">Deposit with Paystack</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="quick-links">
+                        <h3>Quick Links</h3>
+                        <div class="links-grid">
+                            <a href="./history.html" class="link-card">
+                                <i class="fas fa-receipt"></i>
+                                <span>View Orders</span>
+                            </a>
+                            <a href="#" class="link-card">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="#" class="link-card">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payment Methods</span>
+                            </a>
+                            <a href="#" class="link-card">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Security</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <div class="logout-section">
+                        <button id="logout-btn" class="btn btn-logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="">
+        <div class="col">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> 134 Melcom Road, Street 14, sokoban</p>
+            <p><strong>Phone:</strong> (+233) 597 532 120/(+233) 249 757 771</p>
+            <p><strong>Hours:</strong> 24/7, Mon - Sun</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Orders</a>
+            <a href="#">History</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+            </div>
+            <p>Secured Payment Gateways</p>
+        </div>
+    </footer>
+    <div class="cpr">
+        <p>&copy; 2026, Tech1 etc - HTML CSS JS Ecommerce Template</p>
+    </div>
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="nav.js"></script>
+    <script src="home-page.js"></script>
+    <script src="account.js?v=3"></script>
+    <script src="footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+/* Shared footer used by every page. */
+.site-footer {
+    display: grid !important;
+    grid-template-columns: 1.35fr 1fr 1fr 1.2fr !important;
+    gap: clamp(24px, 4vw, 64px) !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 56px clamp(20px, 6vw, 80px) 42px !important;
+    background: rgb(32, 27, 27) !important;
+    color: rgb(200, 195, 195) !important;
+    border-top: 1px solid rgba(109, 214, 4, 0.25);
+}
+
+.site-footer .footer-column {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 11px;
+    min-width: 0;
+}
+
+.site-footer h4 {
+    margin: 0 0 8px;
+    color: rgb(109, 214, 4) !important;
+    font-size: 16px;
+}
+
+.site-footer p {
+    margin: 0;
+    color: rgb(170, 165, 165) !important;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.site-footer a {
+    color: rgb(200, 195, 195) !important;
+    font-size: 13px;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: rgb(109, 214, 4) !important;
+    transform: translateX(3px);
+}
+
+.site-footer .footer-follow {
+    margin-top: 12px;
+}
+
+.site-footer .footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.site-footer .footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(100, 95, 95);
+    border-radius: 50%;
+    color: rgb(200, 195, 195) !important;
+}
+
+.site-footer .footer-socials a:hover {
+    transform: translateY(-2px);
+    border-color: rgb(109, 214, 4);
+}
+
+.site-footer .app-badges,
+.site-footer .payment-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.site-footer .app-badges span,
+.site-footer .payment-badges span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 11px;
+    border: 1px solid rgb(100, 95, 95);
+    border-radius: 4px;
+    color: rgb(200, 195, 195);
+    font-size: 12px;
+}
+
+.site-footer .payment-label {
+    margin-top: 12px;
+}
+
+.site-copyright {
+    width: 100%;
+    margin: 0;
+    padding: 18px 20px;
+    background: rgb(20, 15, 15);
+    color: rgb(150, 145, 145);
+    text-align: center;
+    font-size: 12px;
+}
+
+.site-copyright p {
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .site-footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .site-footer {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+        padding: 40px 20px 32px !important;
+    }
+
+    .site-footer .footer-column {
+        width: 100%;
+    }
+
+    .site-footer .footer-socials a {
+        width: 38px;
+        height: 38px;
+    }
+}

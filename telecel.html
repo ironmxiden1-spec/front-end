@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecel Shop - WIMPS</title>
+    <link rel="stylesheet" href="home-page.css">
+    <link rel="stylesheet" href="telecel.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <section class="header">
+        <a href="home-page.html" class="logo-link">
+            <span class="logo-text">WIMPS</span>
+        </a>
+
+        <div class="nav-wrapper">
+            <ul id="navbar">
+                <li><a href="home-page.html">Home</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a class="active" href="telecel.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li class="close-item"><a href="#" id="close"><i class="fas fa-times"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="mobile">
+            <a href="account.html" class="mobile-account">
+                <i class="fas fa-user"></i>
+            </a>
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+
+    <section class="shop-hero">
+        <div class="hero-copy">
+            <span class="eyebrow">Telecel Data Bundles</span>
+            <h1>Buy Telecel bundles instantly with Paystack or wallet credit</h1>
+            <p>Choose a bundle and pay with your wallet or Paystack.</p>
+        </div>
+    </section>
+
+    <section class="bundle-section">
+        <div class="section-header">
+            <h2>Telecel Bundle Packs</h2>
+            <p>Select a plan below. Each card includes the Telecel pricing from ResellerXpress so you always see the latest available total.</p>
+        </div>
+        <div id="bundle-list" class="bundle-grid"></div>
+    </section>
+
+    <!-- Checkout Modal/Popup -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Confirm Your Order</h2>
+            </div>
+            <div class="modal-body">
+                <div class="order-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Bundle:</span>
+                        <span class="detail-value" id="modal-bundle-name">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Price per GB:</span>
+                        <span class="detail-value" id="modal-price-per-gb">GHS 4.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Quantity:</span>
+                        <span class="detail-value" id="modal-quantity">1</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Base Amount:</span>
+                        <span class="detail-value" id="modal-base-amount">GHS 4.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Handling Fee:</span>
+                        <span class="detail-value" id="modal-fee">GHS 0.00</span>
+                    </div>
+                    <div class="detail-item total-item">
+                        <span class="detail-label">Total Amount:</span>
+                        <span class="detail-value" id="modal-total">GHS 4.00</span>
+                    </div>
+                </div>
+                
+                <div class="phone-input-group">
+                    <label for="phone-number">Telecel Phone Number <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="phone-number" 
+                        class="phone-input" 
+                        placeholder="e.g., 0597532120 or 233597532120"
+                        required
+                    >
+                    <small class="phone-hint">Your bundle will be delivered to this number</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="buy-paystack-btn" class="btn btn-paystack">
+                    <i class="fas fa-credit-card"></i> Buy with Paystack
+                </button>
+                <button id="buy-wallet-btn" class="btn btn-wallet">
+                    <i class="fas fa-wallet"></i> Buy with Wallet
+                </button>
+                <button id="modal-close-btn" class="btn btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="notes-section">
+        <div class="notes-card">
+            <h3>Payment Options</h3>
+            <p>You can purchase directly with wallet balance, or choose Paystack for instant checkout without using your wallet.</p>
+            <p>Every purchase will be recorded in your transaction history and can be linked to backend email alerts once the server is connected.</p>
+        </div>
+    </section>
+
+    <footer class="shop-footer">
+        <div class="footer-row">
+            <div>
+                <h4>Contact</h4>
+                <p>134 Melcom Road, Street 14, Sokoban</p>
+                <p>(+233) 597 532 120</p>
+            </div>
+            <div>
+                <h4>Support</h4>
+                <p>24/7 help and email alerts for every transaction.</p>
+                <p><a href="mailto:support@wimps.com">support@wimps.com</a></p>
+            </div>
+        </div>
+        <p class="footer-note">&copy; 2026 WIMPS. All rights reserved.</p>
+    </footer>
+
+    <!-- Load config first to set environment variables -->
+    <!-- Load Paystack -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="nav.js"></script>
+    <script src="home-page.js?v=3"></script>
+    <!-- Load MTN page logic -->
+    <script src="mtn.js?v=5"></script>
+    <script src="footer.js"></script>
+</body>
+</html>

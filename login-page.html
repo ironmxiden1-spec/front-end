@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WIMPS</title>
+    <link rel="stylesheet" href="login-page.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <section class="header">
+        <a href="home-page.html">WIMPS</a>
+        <div>
+            <ul id="navbar">
+                <li><a href="home-page.html">Home</a></li>
+                <li><a href="./history.html">History</a></li>
+                <li><a href="./mtn.html" class="rmv">Shop</a></li>
+                <li><a href="./about.html">About</a></li>
+                <li><a href="./account.html">Account</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="account.html" class="a">Account</a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-box">
+            <!-- Login Form -->
+            <div class="form-box login-form active">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-field">
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <button type="button" class="password-toggle" data-password-toggle="password" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox"> Remember me</label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+                <div class="auth-divider"><span>or</span></div>
+                <div id="google-login-button" class="google-button"></div>
+                <p class="toggle-text">Don't have an account? <a href="#" id="toggle-signup">Sign up here</a></p>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="form-box signup-form">
+                <h2>Create Account</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signup-fullname">Full Name</label>
+                        <input type="text" id="signup-fullname" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <div class="password-field">
+                            <input type="password" id="signup-password" placeholder="Create a password" required>
+                            <button type="button" class="password-toggle" data-password-toggle="signup-password" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <div class="password-field">
+                            <input type="password" id="signup-confirm" placeholder="Confirm your password" required>
+                            <button type="button" class="password-toggle" data-password-toggle="signup-confirm" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="terms">
+                        <label><input type="checkbox" required> I agree to the Terms & Conditions</label>
+                    </div>
+                    <button type="submit" class="btn-submit">Sign Up</button>
+                </form>
+                <div class="auth-divider"><span>or</span></div>
+                <div id="google-signup-button" class="google-button"></div>
+                <p class="toggle-text">Already have an account? <a href="#" id="toggle-login">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="home-page.js?v=3"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="login-page.js?v=3"></script>
+
+</body>
+</html>
+
