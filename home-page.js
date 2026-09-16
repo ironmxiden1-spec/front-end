@@ -65,7 +65,7 @@
                     try {
                         const res = await fetch(`${API_BASE}/wallet/deposit`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { ...window.wimpsAuthHeaders(), 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 email: user.email,
                                 amount: depositAmount,

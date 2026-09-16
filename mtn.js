@@ -143,7 +143,9 @@
     }
 
     try {
-      const res = await fetch(`${API_BASE}/wallet/${user.email}`);
+      const res = await fetch(`${API_BASE}/wallet/${user.email}`, {
+        headers: window.wimpsAuthHeaders()
+      });
       const data = await res.json();
 
       if (balanceEl) {
@@ -321,6 +323,7 @@
       const res = await fetch(`${API_BASE}/wallet/buy`, {
         method: "POST",
         headers: {
+          ...window.wimpsAuthHeaders(),
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -376,6 +379,7 @@
             const res = await fetch(`${API_BASE}/wallet/buy`, {
               method: "POST",
               headers: {
+                ...window.wimpsAuthHeaders(),
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
@@ -447,6 +451,7 @@
             const res = await fetch(`${API_BASE}/wallet/deposit`, {
               method: "POST",
               headers: {
+                ...window.wimpsAuthHeaders(),
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({

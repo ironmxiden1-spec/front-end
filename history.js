@@ -48,7 +48,9 @@ function toggleView(isLoggedIn) {
 // ==========================
 async function loadTransactions(email) {
     try {
-        const res = await fetch(`${API_BASE}/transactions/${email}`);
+        const res = await fetch(`${API_BASE}/transactions/${email}`, {
+            headers: window.wimpsAuthHeaders()
+        });
 
         if (!res.ok) throw new Error("API failed");
 

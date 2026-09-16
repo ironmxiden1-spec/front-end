@@ -99,7 +99,9 @@ function populateAccountInfo(user) {
 async function loadAccountData(email) {
     try {
         // ===== WALLET =====
-        const walletRes = await fetch(`${API_BASE}/wallet/${email}`);
+        const walletRes = await fetch(`${API_BASE}/wallet/${email}`, {
+            headers: window.wimpsAuthHeaders()
+        });
 
         if (!walletRes.ok) throw new Error("Wallet request failed");
 
@@ -117,7 +119,9 @@ async function loadAccountData(email) {
         localStorage.setItem("user", JSON.stringify(user));
 
         // ===== TRANSACTIONS =====
-        const txRes = await fetch(`${API_BASE}/transactions/${email}`);
+        const txRes = await fetch(`${API_BASE}/transactions/${email}`, {
+            headers: window.wimpsAuthHeaders()
+        });
 
         if (!txRes.ok) throw new Error("Transactions request failed");
 

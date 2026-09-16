@@ -52,7 +52,8 @@
             fullname: user.fullname,
             email: user.email,
             balance: user.balance || 0,
-            createdAt: user.createdAt
+            createdAt: user.createdAt,
+            authToken: user.authToken
         }));
         window.location.href = "./account.html";
     }
@@ -118,24 +119,7 @@
         window.setTimeout(() => window.clearInterval(googleWait), 10000);
     });
 
-    const DEMO_USERS = {
-        "test@mail.com": {
-            id: "demo-test-user",
-            fullname: "Test User",
-            email: "test@mail.com",
-            password: "123456",
-            balance: 0,
-            createdAt: new Date("2026-04-29T01:59:32.256Z").toISOString()
-        },
-        "mark@gmail.com": {
-            id: "demo-mark-user",
-            fullname: "mark nine",
-            email: "mark@gmail.com",
-            password: "123456",
-            balance: 0,
-            createdAt: new Date("2026-04-29T02:15:31.477Z").toISOString()
-        }
-    };
+    const DEMO_USERS = {};
 
     const loginForm = document.getElementById("loginForm");
     const forgotPasswordLink = document.querySelector(".remember-forgot a");
@@ -202,7 +186,8 @@
                         fullname: data.user.fullname,
                         email: data.user.email,
                         balance: data.user.balance || 0,
-                        createdAt: data.user.createdAt
+                        createdAt: data.user.createdAt,
+                        authToken: data.user.authToken
                     };
                     localStorage.setItem("user", JSON.stringify(user));
                     window.location.href = "./account.html";
@@ -241,7 +226,7 @@
                 }
 
                 console.error(err);
-                alert("Server error. Backend is unavailable right now. Use a demo account: test@mail.com / 123456 or mark@gmail.com / 123456.");
+                alert("Server error. Backend is unavailable right now.");
             }
         });
     }
