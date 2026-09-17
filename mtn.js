@@ -413,7 +413,7 @@
             loadBundleOffers();
           } catch (err) {
             console.error(err);
-            alert("Verification failed");
+            window.wimsNotice?.("Payment completed, but the server could not verify it. Please check your transaction history before trying again.", "error");
           }
         })();
       },
@@ -464,7 +464,7 @@
             const data = await res.json();
 
             if (!res.ok) {
-              alert(data.msg || data.message || "Deposit verification failed");
+              window.wimsNotice?.(data.msg || data.message || "Your deposit could not be verified. Please check Paystack and try again.", "error");
               return;
             }
 
@@ -473,11 +473,11 @@
               setUser(user);
             }
 
-            alert(data.msg || "Deposit successful");
+            window.wimsNotice?.(data.msg || "Deposit successful", "success");
             updateWallet();
           } catch (err) {
             console.error(err);
-            alert("Deposit failed");
+            window.wimsNotice?.("We could not confirm your deposit. Please check your transaction status before retrying.", "error");
           }
         })();
       },

@@ -43,6 +43,8 @@
             initializeGoogleButtons();
         } catch (error) {
             console.error("Unable to load auth configuration", error);
+            authConfig = {};
+            initializeGoogleButtons();
         }
     }
 

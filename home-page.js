@@ -75,7 +75,7 @@
 
                         const data = await res.json();
                         if (!res.ok) {
-                            alert(data.msg || data.message || 'Deposit verification failed');
+                            window.wimsNotice?.(data.msg || data.message || 'Your deposit could not be verified. Please check Paystack and try again.', 'error');
                             return;
                         }
 
@@ -85,10 +85,10 @@
                         }
 
                         updateBalanceInDom();
-                        alert(data.msg || 'Deposit successful');
+                        window.wimsNotice?.(data.msg || 'Deposit successful', 'success');
                     } catch (err) {
                         console.error(err);
-                        alert('Deposit failed');
+                        window.wimsNotice?.('We could not confirm your deposit. Please check your transaction status before retrying.', 'error');
                     }
                 })();
             },
