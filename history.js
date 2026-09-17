@@ -68,6 +68,7 @@ async function loadTransactions(email) {
             recipient: tx.phone,
             status: (tx.status || "completed").toLowerCase(),
             date: tx.date,
+            deliveredAt: tx.deliveredAt,
             paymentMethod: tx.paymentMethod || "wallet"
         }))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -230,6 +231,9 @@ function openModal(id) {
     document.getElementById("modal-amount").textContent = "GHS " + Number(tx.amount).toFixed(2);
     document.getElementById("modal-status").textContent = capitalize(tx.status);
     document.getElementById("modal-date").textContent = new Date(tx.date).toLocaleString();
+    document.getElementById("modal-delivered-at").textContent = tx.deliveredAt
+        ? new Date(tx.deliveredAt).toLocaleString()
+        : (tx.status === "completed" ? "Completed (time not recorded)" : "Pending delivery");
     document.getElementById("modal-recipient").textContent = tx.recipient || "N/A";
     document.getElementById("modal-bundle-details").textContent = tx.bundle || "N/A";
     document.getElementById("modal-payment-method").textContent = tx.paymentMethod || "N/A";
