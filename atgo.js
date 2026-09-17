@@ -292,7 +292,8 @@
     if (!p) return;
 
     const phone = document.getElementById("phone-number").value.trim();
-    if (!phone) return alert("Enter phone number");
+    const phoneCheck = window.wimsPhone.validate(phone, "airteltigo");
+    if (!phoneCheck.valid) return window.wimsNotice?.(phoneCheck.message, "warning");
 
     try {
       const res = await fetch(`${API_BASE}/wallet/buy`, {
@@ -340,7 +341,8 @@
     if (!(await ensurePaymentConfig())) return;
 
     const phone = document.getElementById("phone-number").value.trim();
-    if (!phone) return alert("Enter phone number");
+    const phoneCheck = window.wimsPhone.validate(phone, "airteltigo");
+    if (!phoneCheck.valid) return window.wimsNotice?.(phoneCheck.message, "warning");
 
     const handler = PaystackPop.setup({
       key: PAYSTACK_KEY,

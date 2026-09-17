@@ -190,6 +190,22 @@
             if (details[0]) details[0].textContent = provider.configured ? "Configured" : "Missing";
             if (details[1]) details[1].textContent = provider.balanceUnavailable ? "Unavailable via API" : Number.isFinite(provider.balance) ? `GH₵ ${provider.balance.toFixed(2)}` : provider.error ? "Temporarily unavailable" : "Unavailable";
         });
+        const balancesResponse = await fetch(`${adminApiBase}/admin/balances`, { headers: { "X-Admin-Token": adminToken } });
+        const balancesPayload = await balancesResponse.json();
+        if (!balancesResponse.ok) throw new Error(balancesPayload.msg || "Unable to load balances");
+        const money = (value) => `GH₵ ${Number(value).toFixed(2)}`;
+        document.querySelectorAll("[data-balance-provider]").forEach((row) => {
+            const value = balancesPayload.balances?.[row.dataset.balanceProvider];
+            const amount = row.querySelector("b");
+            if (amount && Number.isFinite(Number(value?.amount))) amount.textContent = money(value.amount);
+        });
+        document.querySelectorAll("[data-wallet-provider]").forEach((card) => {
+            const value = balancesPayload.balances?.[card.dataset.walletProvider];
+            const amount = card.querySelector("strong");
+            const status = card.querySelector("small");
+            if (amount && Number.isFinite(Number(value?.amount))) amount.textContent = money(value.amount);
+            if (status && value?.error) status.textContent = value.error;
+        });
     }
 
     async function loadComparison() {

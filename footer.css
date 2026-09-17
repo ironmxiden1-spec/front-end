@@ -44,6 +44,13 @@
     color: rgb(109, 214, 4) !important;
     transform: translateX(3px);
 }
+.site-copyright .admin-secret-link {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 4px;
+    opacity: 0;
+}
 
 .site-footer .footer-follow {
     margin-top: 12px;

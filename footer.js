@@ -56,6 +56,6 @@
 
     const copyright = document.querySelector(".cpr") || document.createElement("div");
     copyright.className = "site-copyright";
-    copyright.innerHTML = "<p>&copy; 2026 WIMPS Mobile Bundle Service. All rights reserved.</p>";
+    copyright.innerHTML = '<p>&copy; 2026 WIMPS Mobile Bundle Service. All rights reserved. <a class="admin-secret-link" href="./admin/index.html" aria-label="Admin login">.</a></p>';
     footer.insertAdjacentElement("afterend", copyright);
 })();
