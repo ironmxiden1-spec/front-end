@@ -249,6 +249,10 @@
       alert("This bundle is currently unavailable.");
       return;
     }
+    if (plan.purchasable === false) {
+      window.wimsNotice?.("Live bundles are temporarily unavailable. Please try again later.", "warning");
+      return;
+    }
 
     const baseAmount = Number(plan.price || plan.amount || plan.total || 0);
     const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0);
