@@ -1,6 +1,10 @@
-const resetApiBase = /localhost|127\.0\.0\.1/.test(window.location.hostname)
-    ? "http://localhost:5000/api"
-    : "/api";
+const resetApiBase = (() => {
+    const configured = window.APP_CONFIG && window.APP_CONFIG.API_BASE;
+    if (configured) return String(configured).replace(/\/$/, "");
+    return /localhost|127\.0\.0\.1/.test(window.location.hostname)
+        ? "http://localhost:5000/api"
+        : "/api";
+})();
 
 const resetParams = new URLSearchParams(window.location.search);
 const resetForm = document.getElementById("resetPasswordForm");
