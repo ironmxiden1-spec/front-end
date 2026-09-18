@@ -14,7 +14,7 @@
     const labels = {
         dashboard: "Dashboard", orders: "Orders", bulk: "Bulk Purchase", comparison: "Provider Comparison",
         providers: "Providers", wallets: "Provider Wallets", customers: "Customers", payments: "Payments",
-        pricing: "Pricing", reports: "Profit & Reports", logs: "API & Webhook Logs", settings: "Settings", audit: "Audit Logs"
+        pricing: "Pricing", reports: "Profit & Reports", logs: "API & Webhook Logs", settings: "Settings", audit: "Audit Logs", retention: "Data Retention"
     };
 
     function showToast(message) {
@@ -81,8 +81,9 @@
     document.getElementById("logout-button")?.addEventListener("click", () => {
         adminToken = "";
         sessionStorage.removeItem("wimps-admin-token");
-        document.getElementById("connect-api-button").textContent = "Connect API";
-        showToast("Admin API disconnected.");
+        document.body.classList.remove("admin-authenticated");
+        document.getElementById("connect-api-button").textContent = "Admin login";
+        openApiDialog();
     });
     document.getElementById("notification-button")?.addEventListener("click", () => {
         openView("providers");
@@ -100,23 +101,26 @@
         if (apiTokenInput) { apiTokenInput.value = ""; apiTokenInput.focus(); }
     }
     function closeApiDialog() {
+        if (!adminToken) return;
         apiDialog?.classList.remove("open");
         apiDialog?.setAttribute("aria-hidden", "true");
     }
     document.getElementById("connect-api-button")?.addEventListener("click", openApiDialog);
-    document.getElementById("api-dialog-close")?.addEventListener("click", closeApiDialog);
-    document.getElementById("api-dialog-cancel")?.addEventListener("click", closeApiDialog);
     document.getElementById("api-dialog-submit")?.addEventListener("click", async () => {
         const token = apiTokenInput?.value.trim();
         if (!token) { if (apiDialogError) apiDialogError.textContent = "Enter your admin API token."; return; }
         if (apiDialogError) apiDialogError.textContent = "Connecting...";
         try {
             await loadCustomerCount(token);
+            document.body.classList.add("admin-authenticated");
             closeApiDialog();
-            document.getElementById("connect-api-button").textContent = "API connected";
+            document.getElementById("connect-api-button").textContent = "Admin connected";
         } catch (error) {
             if (apiDialogError) apiDialogError.textContent = error.message || "Connection failed.";
         }
+    });
+    apiTokenInput?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") document.getElementById("api-dialog-submit")?.click();
     });
     document.getElementById("global-search")?.addEventListener("keydown", (event) => {
         if (event.key === "Enter") showToast(`Search is waiting for the admin orders API: ${event.currentTarget.value || "all records"}`);
@@ -364,7 +368,49 @@
         } catch (error) { showToast(error.message); }
     }
 
-    if (adminToken) loadCustomerCount(adminToken).catch(() => sessionStorage.removeItem("wimps-admin-token"));
+    document.getElementById("purge-data-button")?.addEventListener("click", async () => {
+        if (!adminToken) return showToast("Connect the admin API first.");
+        const confirmation = document.getElementById("retention-confirmation")?.value.trim();
+        if (confirmation !== "DELETE ALL DATA") return showToast("Type DELETE ALL DATA exactly to confirm.");
+        if (!window.confirm("This permanently deletes every account and transaction. Continue?")) return;
+
+        const button = document.getElementById("purge-data-button");
+        const status = document.getElementById("retention-status");
+        button.disabled = true;
+        status.textContent = "Deleting data...";
+        try {
+            const response = await fetch(`${adminApiBase}/admin/data-retention/purge`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken },
+                body: JSON.stringify({ confirmation })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || "Unable to delete data");
+            status.textContent = `${data.deletedUsers} accounts and ${data.deletedTransactions} transactions deleted.`;
+            showToast("All account and transaction data deleted.");
+            await loadAdminData(adminToken);
+        } catch (error) {
+            status.textContent = error.message;
+            showToast(error.message);
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    if (adminToken) {
+        loadCustomerCount(adminToken)
+            .then(() => {
+                document.body.classList.add("admin-authenticated");
+                document.getElementById("connect-api-button").textContent = "Admin connected";
+            })
+            .catch(() => {
+                adminToken = "";
+                sessionStorage.removeItem("wimps-admin-token");
+                openApiDialog();
+            });
+    } else {
+        openApiDialog();
+    }
 
     if (localStorage.getItem("wimps-admin-theme") === "dark") document.body.classList.add("dark");
     openView(window.location.hash.slice(1) || "dashboard");

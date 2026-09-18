@@ -210,7 +210,7 @@
                     return;
                 }
 
-                alert(data.msg || "Login failed");
+                alert(data.notice ? `${data.msg || "Login failed"}\n\n${data.notice}` : (data.msg || "Login failed"));
             } catch (err) {
                 const demoUser = DEMO_USERS[email];
                 if (demoUser && demoUser.password === password) {
