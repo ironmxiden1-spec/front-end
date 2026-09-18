@@ -193,7 +193,10 @@
     container.innerHTML = sortedPlans.map((plan) => {
       const total = Number(plan.sellingPrice || 0);
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
-      const publicBundleName = plan.volume || plan.volume_mb || bundleName;
+      const volumeGb = Number(plan.volumeGb);
+      const publicBundleName = Number.isFinite(volumeGb) && volumeGb > 0
+        ? `${Number.isInteger(volumeGb) ? volumeGb : volumeGb.toFixed(2)}GB`
+        : `${plan.volume || plan.volume_mb || bundleName}GB`;
 
       return `
         <div class="bundle-card">
