@@ -124,7 +124,6 @@
     const DEMO_USERS = {};
 
     const loginForm = document.getElementById("loginForm");
-    const forgotPasswordLink = document.querySelector(".remember-forgot a");
 
     document.querySelectorAll('[data-password-toggle]').forEach((toggle) => {
         toggle.addEventListener('click', () => {
@@ -137,26 +136,6 @@
         });
     });
 
-    if (forgotPasswordLink) {
-        forgotPasswordLink.addEventListener("click", async (event) => {
-            event.preventDefault();
-            const email = window.prompt("Enter the email address for your WIMPS account:", document.getElementById("email")?.value || "");
-            if (!email) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/forgot-password`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: email.trim() })
-                });
-                const data = await response.json();
-                alert(data.msg || "If an account exists, a reset email has been sent");
-            } catch (error) {
-                console.error(error);
-                alert("Unable to request a password reset right now");
-            }
-        });
-    }
 
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
