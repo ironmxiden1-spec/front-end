@@ -198,11 +198,11 @@
               ? data.result
               : [];
 
-      latestPlans = rawPlans.filter((plan) => Number(plan.price || plan.amount || 0) > 0);
+      latestPlans = rawPlans.filter((plan) => plan.purchasable !== false && Number(plan.price || plan.amount || 0) > 0);
       renderBundles();
     } catch (err) {
       console.error("Offer load error:", err);
-      latestPlans = getFallbackPlans(network);
+      latestPlans = [];
       renderBundles();
     }
   }
