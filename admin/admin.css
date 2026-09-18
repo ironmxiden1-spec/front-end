@@ -3,7 +3,7 @@
 :root { --ink:#15211f; --muted:#71807b; --line:#dfe8e3; --paper:#f5f8f5; --card:#fff; --green:#0d8b61; --green-dark:#086044; --mint:#dff4ea; --yellow:#f4c95d; --red:#c85b54; --sidebar:#102522; --shadow:0 16px 40px rgba(27,58,46,.08); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { margin:0; background:var(--paper); color:var(--ink); font-family:'Manrope',sans-serif; font-size:14px; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:'Manrope',sans-serif; font-size:14px; overflow-x:hidden; }
 button,input,select,textarea { font:inherit; }
 button { cursor:pointer; }
 a { color:inherit; text-decoration:none; }
