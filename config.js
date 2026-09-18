@@ -22,3 +22,28 @@ window.wimpsAuthHeaders = () => {
 		return {};
 	}
 };
+window.wimpsLogout = (message) => {
+	localStorage.removeItem("user");
+	localStorage.removeItem("accountStats");
+	if (message) window.wimsNotice?.(message, "warning");
+	window.setTimeout(() => { window.location.href = "./login-page.html?v=3#signup"; }, 250);
+};
+window.wimpsCheckSession = async () => {
+	try {
+		const rawUser = localStorage.getItem("user");
+		const user = rawUser ? JSON.parse(rawUser) : null;
+		if (!user?.authToken) return true;
+		const configured = window.APP_CONFIG?.API_BASE;
+		const apiBase = configured ? String(configured).replace(/\/$/, "") : (/localhost|127\.0\.0\.1/.test(window.location.hostname) ? "http://localhost:5000/api" : "/api");
+		const response = await fetch(`${apiBase}/auth/session`, { headers: window.wimpsAuthHeaders() });
+		if (response.status === 401) {
+			const data = await response.json().catch(() => ({}));
+			window.wimpsLogout(data.msg || "Your account was deleted. Create a new account to continue.");
+			return false;
+		}
+		return response.ok;
+	} catch (error) {
+		return true;
+	}
+};
+document.addEventListener("DOMContentLoaded", () => window.wimpsCheckSession());

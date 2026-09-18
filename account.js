@@ -103,6 +103,10 @@ async function loadAccountData(email) {
             headers: window.wimpsAuthHeaders()
         });
 
+        if (walletRes.status === 401) {
+            window.wimpsLogout?.("Your account was deleted. Create a new account to continue.");
+            return;
+        }
         if (!walletRes.ok) throw new Error("Wallet request failed");
 
         const walletData = await walletRes.json();
