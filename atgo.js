@@ -196,7 +196,6 @@
       const smsFee = Number(plan.smsFee || 0);
       const cost = Number(price || plan.cost || plan.total || 0);
       const total = Number(plan.sellingPrice || 0);
-      const profit = Number(plan.expectedProfit ?? (total - cost - fee - smsFee));
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
       const volume = plan.volume || plan.volume_mb || "-";
       const networkName = plan.network || getCurrentNetwork();
@@ -225,10 +224,6 @@
             <div class="price-item">
               <span class="label">Fee</span>
               <span class="value">GHS ${(fee + smsFee).toFixed(2)}</span>
-            </div>
-            <div class="price-item">
-              <span class="label">Profit</span>
-              <span class="value">GHS ${profit.toFixed(2)}</span>
             </div>
             <div class="price-item total">
               <span class="label">Selling price</span>
