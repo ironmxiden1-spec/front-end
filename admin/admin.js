@@ -131,6 +131,7 @@
     document.getElementById("orders-status")?.addEventListener("change", renderOrders);
     document.getElementById("orders-network")?.addEventListener("change", renderOrders);
     document.getElementById("bulk-network")?.addEventListener("change", loadBulkBundles);
+    document.getElementById("chart-range")?.addEventListener("change", renderDashboard);
 
     async function loadAdminData(token) {
         adminToken = token;
@@ -177,6 +178,7 @@
         document.getElementById("total-users-value").textContent = Number(data.totalUsers || 0).toLocaleString();
         document.getElementById("total-users-status").textContent = "Registered customers";
         document.getElementById("connect-users-button")?.remove();
+        renderDashboard();
     }
 
     async function loadProviders() {
@@ -246,6 +248,67 @@
         const body = document.getElementById("orders-body");
         loadedOrders = payload.data || [];
         renderOrders();
+        renderDashboard();
+    }
+
+    function orderNetwork(order) {
+        const text = `${order.network || ""} ${order.bundle || ""}`.toLowerCase();
+        if (text.includes("telecel")) return "Telecel";
+        if (text.includes("airteltigo") || text.includes("airtel")) return "AirtelTigo";
+        if (text.includes("mtn")) return "MTN";
+        return "Other";
+    }
+
+    function renderDashboard() {
+        renderRecentOrders();
+        renderNetworkMix();
+        renderSalesChart();
+    }
+
+    function renderRecentOrders() {
+        const container = document.getElementById("recent-orders");
+        if (!container) return;
+        const recent = loadedOrders.filter((order) => order.type === "purchase" || !order.type).slice(0, 5);
+        if (!recent.length) {
+            container.innerHTML = '<div class="empty-state compact"><span class="empty-icon">↗</span><strong>No recent orders</strong><p>Verified orders will appear here after the first purchase.</p></div>';
+            return;
+        }
+        container.innerHTML = recent.map((order) => `<div class="recent-order"><div><strong>${order.bundle || "Data purchase"}</strong><small>${order.phone || order.email || "Customer unavailable"}</small></div><div><b>GH₵ ${Number(order.amount || 0).toFixed(2)}</b><small>${order.status || "pending"}</small></div></div>`).join("");
+    }
+
+    function renderNetworkMix() {
+        const container = document.getElementById("network-mix");
+        const note = document.getElementById("network-mix-note");
+        if (!container) return;
+        const counts = { MTN: 0, Telecel: 0, AirtelTigo: 0 };
+        loadedOrders.filter((order) => order.type === "purchase" || !order.type).forEach((order) => {
+            const network = orderNetwork(order);
+            if (counts[network] !== undefined) counts[network] += 1;
+        });
+        const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+        container.innerHTML = Object.entries(counts).map(([network, count]) => `<div><span>${network}</span><i><em style="width:${total ? (count / total) * 100 : 0}%"></em></i><b>${count}</b></div>`).join("");
+        if (note) note.textContent = total ? `${total} verified purchase${total === 1 ? "" : "s"} in the loaded order feed.` : "No verified network sales yet.";
+    }
+
+    function renderSalesChart() {
+        const chart = document.getElementById("sales-chart");
+        if (!chart) return;
+        const days = Number(document.getElementById("chart-range")?.value || 7);
+        const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+        const points = Array.from({ length: Math.min(days, 14) }, (_, index) => {
+            const date = new Date(Date.now() - (Math.min(days, 14) - 1 - index) * 24 * 60 * 60 * 1000);
+            return { date, sales: 0, profit: 0 };
+        });
+        loadedOrders.filter((order) => new Date(order.date || 0).getTime() >= cutoff).forEach((order) => {
+            const date = new Date(order.date || 0);
+            const point = points.find((item) => item.date.toDateString() === date.toDateString());
+            if (point) {
+                point.sales += Number(order.amount || 0);
+                point.profit += Number(order.actualProfit ?? order.expectedProfit ?? 0);
+            }
+        });
+        const maximum = Math.max(...points.map((point) => Math.max(point.sales, point.profit)), 1);
+        chart.innerHTML = `<div class="chart-bars">${points.map((point) => `<div class="chart-day" title="${point.date.toLocaleDateString()}"><span class="chart-columns"><i style="height:${point.sales / maximum * 100}%"></i><em style="height:${point.profit / maximum * 100}%"></em></span><small>${point.date.toLocaleDateString(undefined, { weekday: "short" }).slice(0, 2)}</small></div>`).join("")}</div><div class="chart-legend"><span><i></i>Sales</span><span><em></em>Profit</span></div>`;
     }
 
     async function loadPayments() {
