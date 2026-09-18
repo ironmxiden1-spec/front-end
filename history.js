@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", init);
 // ==========================
 // INIT
 // ==========================
-function init() {
+async function init() {
+    if (window.wimpsCheckSession && !(await window.wimpsCheckSession())) return;
     const user = getUser();
 
     if (!user || !user.email) {

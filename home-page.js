@@ -117,7 +117,8 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (window.wimpsCheckSession && !(await window.wimpsCheckSession())) return;
         loadUserData();
         setupNewsletter();
         setupHomeDepositPage();

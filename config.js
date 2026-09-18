@@ -23,12 +23,19 @@ window.wimpsAuthHeaders = () => {
 	}
 };
 window.wimpsLogout = (message) => {
+	const user = (() => {
+		try { return JSON.parse(localStorage.getItem("user") || "null"); } catch (error) { return null; }
+	})();
 	localStorage.removeItem("user");
 	localStorage.removeItem("accountStats");
+	if (user?.email) localStorage.removeItem(`profilePicture:${user.email}`);
 	if (message) window.wimsNotice?.(message, "warning");
 	window.setTimeout(() => { window.location.href = "./login-page.html?v=3#signup"; }, 250);
 };
-window.wimpsCheckSession = async () => {
+window.wimpsSessionCheck = window.wimpsSessionCheck || null;
+window.wimpsCheckSession = () => {
+	if (window.wimpsSessionCheck) return window.wimpsSessionCheck;
+	const check = (async () => {
 	try {
 		const rawUser = localStorage.getItem("user");
 		const user = rawUser ? JSON.parse(rawUser) : null;
@@ -41,10 +48,13 @@ window.wimpsCheckSession = async () => {
 			window.wimpsLogout(data.msg || "Your account was deleted. Create a new account to continue.");
 			return false;
 		}
-		return response.ok;
+		return true;
 	} catch (error) {
 		return true;
 	}
+})();
+	window.wimpsSessionCheck = check.finally(() => { window.wimpsSessionCheck = null; });
+	return window.wimpsSessionCheck;
 };
 document.addEventListener("DOMContentLoaded", () => window.wimpsCheckSession());
 window.setInterval(() => window.wimpsCheckSession(), 60000);

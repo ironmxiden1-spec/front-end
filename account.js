@@ -11,7 +11,8 @@ const API_BASE = (() => {
         : "/api";
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    if (window.wimpsCheckSession && !(await window.wimpsCheckSession())) return;
     initializeAccount();
     setupAccountDepositButton();
 });
