@@ -193,13 +193,15 @@
     container.innerHTML = sortedPlans.map((plan) => {
       const price = Number(plan.price || plan.amount || 0);
       const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0);
-      const cost = Number(plan.cost || plan.total || (price + fee));
-      const total = Number(plan.sellingPrice || (cost + 1));
+      const smsFee = Number(plan.smsFee || 0);
+      const cost = Number(price || plan.cost || plan.total || 0);
+      const total = Number(plan.sellingPrice || 0);
+      const profit = Number(plan.expectedProfit ?? (total - cost - fee - smsFee));
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
       const volume = plan.volume || plan.volume_mb || "-";
       const networkName = plan.network || getCurrentNetwork();
       const volumeValue = Number(String(volume).replace(/[^0-9.]/g, ""));
-      const pricePerGb = Number.isFinite(volumeValue) && volumeValue > 0 ? price / volumeValue : price;
+      const pricePerGb = Number.isFinite(volumeValue) && volumeValue > 0 ? total / volumeValue : total;
 
       return `
         <div class="bundle-card">
@@ -218,11 +220,15 @@
             </div>
             <div class="price-item">
               <span class="label">Base</span>
-              <span class="value">GHS ${price.toFixed(2)}</span>
+              <span class="value">GHS ${cost.toFixed(2)}</span>
             </div>
             <div class="price-item">
               <span class="label">Fee</span>
-              <span class="value">GHS ${fee.toFixed(2)}</span>
+              <span class="value">GHS ${(fee + smsFee).toFixed(2)}</span>
+            </div>
+            <div class="price-item">
+              <span class="label">Profit</span>
+              <span class="value">GHS ${profit.toFixed(2)}</span>
             </div>
             <div class="price-item total">
               <span class="label">Selling price</span>
@@ -254,12 +260,12 @@
       return;
     }
 
-    const baseAmount = Number(plan.price || plan.amount || plan.total || 0);
-    const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0);
-    const total = Number(plan.sellingPrice || (Number(plan.cost || plan.total || baseAmount + fee) + 1));
+    const baseAmount = Number(plan.price || plan.amount || plan.cost || plan.total || 0);
+    const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0) + Number(plan.smsFee || 0);
+    const total = Number(plan.sellingPrice || 0);
     const volumeText = plan.volume_mb || plan.volume || plan.name || "1";
     const parsedVolume = Number(String(volumeText).replace(/[^0-9.]/g, ""));
-    const pricePerGb = Number.isFinite(parsedVolume) && parsedVolume > 0 ? baseAmount / parsedVolume : baseAmount;
+    const pricePerGb = Number.isFinite(parsedVolume) && parsedVolume > 0 ? total / parsedVolume : total;
 
     currentPurchase = {
       user,

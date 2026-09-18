@@ -739,7 +739,7 @@ img[src=""], img:not([src]) {
 
 @media (max-width: 540px) {
     .bundle-grid {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
 
