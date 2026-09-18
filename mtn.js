@@ -220,45 +220,20 @@
 
     container.dataset.planCount = String(sortedPlans.length);
     container.innerHTML = sortedPlans.map((plan) => {
-      const price = Number(plan.price || plan.amount || 0);
-      const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0);
-      const smsFee = Number(plan.smsFee || 0);
-      const cost = Number(price || plan.cost || plan.total || 0);
       const total = Number(plan.sellingPrice || 0);
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
-      const volume = plan.volume || plan.volume_mb || "-";
-      const networkName = plan.network || getCurrentNetwork();
-      const volumeValue = Number(String(volume).replace(/[^0-9.]/g, ""));
-      const pricePerGb = Number.isFinite(volumeValue) && volumeValue > 0 ? total / volumeValue : total;
+      const publicBundleName = plan.volume || plan.volume_mb || bundleName;
 
       return `
         <div class="bundle-card">
           <div class="card-header">
             <div class="bundle-icon"><i class="fas fa-wifi"></i></div>
             <div class="bundle-header-copy">
-              <h3 class="bundle-label">${bundleName}</h3>
-              <p class="bundle-network">${networkName.toUpperCase()} · ${String(plan.provider || "provider").toUpperCase()}</p>
+              <h3 class="bundle-label">${publicBundleName}</h3>
             </div>
           </div>
 
-          <div class="card-pricing">
-            <div class="price-item">
-              <span class="label">Price / GB</span>
-              <span class="value">GHS ${pricePerGb.toFixed(2)}</span>
-            </div>
-            <div class="price-item">
-              <span class="label">Base</span>
-              <span class="value">GHS ${cost.toFixed(2)}</span>
-            </div>
-            <div class="price-item">
-              <span class="label">Fee</span>
-              <span class="value">GHS ${(fee + smsFee).toFixed(2)}</span>
-            </div>
-            <div class="price-item total">
-              <span class="label">Selling price</span>
-              <span class="value">GHS ${total.toFixed(2)}</span>
-            </div>
-          </div>
+          <div class="public-price">GHS ${total.toFixed(2)}</div>
 
           <div class="card-actions">
             <button onclick="openCheckout('${plan.id}')" class="btn-buy">

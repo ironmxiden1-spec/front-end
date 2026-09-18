@@ -362,6 +362,14 @@ img[src=""], img:not([src]) {
     border-radius: 10px;
 }
 
+.public-price {
+    padding: 12px 10px;
+    color: rgb(109, 214, 4);
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+}
+
 .price-item {
     display: flex;
     justify-content: space-between;
@@ -734,7 +742,7 @@ img[src=""], img:not([src]) {
     }
 
     .bundle-grid {
-        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -809,7 +817,7 @@ img[src=""], img:not([src]) {
     }
 
     .bundle-grid {
-        grid-template-columns: repeat(2, minmax(150px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
 }
