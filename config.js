@@ -47,3 +47,4 @@ window.wimpsCheckSession = async () => {
 	}
 };
 document.addEventListener("DOMContentLoaded", () => window.wimpsCheckSession());
+window.setInterval(() => window.wimpsCheckSession(), 60000);
