@@ -7,10 +7,10 @@ const API_BASE = (() => {
     }
 
     return /localhost|127\.0\.0\.1/.test(window.location.hostname)
-        ? "http://localhost:5000/api"
-        : "/api";
+        ? "http://localhost:5000"
+        : window.location.origin;
 })();
-    let PAYSTACK_PUBLIC_KEY = window.PAYSTACK_CONFIG?.PUBLIC_KEY || window.APP_CONFIG?.PAYSTACK_PUBLIC_KEY || "";
+const PAYSTACK_PUBLIC_KEY = PAYSTACK_CONFIG.PUBLIC_KEY;
 
 let currentSupportAmount = 0;
 let currentSupportType = "";
@@ -33,7 +33,7 @@ function closeSupportModal() {
 // ===== SEND TO BACKEND =====
 async function sendDonation(reference, amount, email) {
     try {
-        const res = await fetch(`${API_BASE}/support/donate`, {
+        const res = await fetch(`${API_BASE}/api/support/donate`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -72,11 +72,6 @@ function payWithCard() {
 
     const ref = "WIMPS-" + Date.now();
 
-    if (!PAYSTACK_PUBLIC_KEY) {
-        alert("Paystack is not configured yet. Please try again shortly.");
-        return;
-    }
-
     const handler = PaystackPop.setup({
         key: PAYSTACK_PUBLIC_KEY,
         email: email,
@@ -98,15 +93,3 @@ function payWithCard() {
 
     handler.openIframe();
 }
-
-window.addEventListener("load", async () => {
-    if (PAYSTACK_PUBLIC_KEY) return;
-
-    try {
-        const response = await fetch(`${API_BASE}/auth/config`);
-        const config = await response.json();
-        PAYSTACK_PUBLIC_KEY = config.paystackPublicKey || "";
-    } catch (error) {
-        console.error("Unable to load Paystack configuration", error);
-    }
-});
