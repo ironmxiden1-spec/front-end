@@ -10,6 +10,7 @@
       : "/api";
   })();
   let PAYSTACK_KEY = window.APP_CONFIG?.PAYSTACK_PUBLIC_KEY || "";
+  const formatVolumeLabel = (volumeGb) => volumeGb < 1 ? `${Math.round(volumeGb * 1024)}MB` : `${Number.isInteger(volumeGb) ? volumeGb : volumeGb.toFixed(2)}GB`;
 
   async function ensurePaymentConfig() {
     if (PAYSTACK_KEY) return true;
@@ -169,7 +170,7 @@
               ? data.result
               : [];
 
-      latestPlans = rawPlans.filter((plan) => plan.purchasable !== false && Number(plan.price || plan.amount || 0) > 0);
+      latestPlans = rawPlans.filter((plan) => Number(plan.volumeGb) >= 1 && (Number(plan.price || plan.amount || 0) > 0 || plan.available === false || plan.purchasable === false));
       renderBundles();
     } catch (err) {
       console.error("Offer load error:", err);
@@ -188,6 +189,7 @@
     }
 
     const sortedPlans = [...latestPlans].sort((a, b) => Number(a.price || a.amount || 0) - Number(b.price || b.amount || 0));
+    const formatVolume = (volumeGb) => volumeGb < 1 ? `${Math.round(volumeGb * 1024)}MB` : `${Number.isInteger(volumeGb) ? volumeGb : volumeGb.toFixed(2)}GB`;
 
     container.dataset.planCount = String(sortedPlans.length);
     container.innerHTML = sortedPlans.map((plan) => {
@@ -195,11 +197,11 @@
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
       const volumeGb = Number(plan.volumeGb);
       const publicBundleName = Number.isFinite(volumeGb) && volumeGb > 0
-        ? `${Number.isInteger(volumeGb) ? volumeGb : volumeGb.toFixed(2)}GB`
+        ? formatVolume(volumeGb)
         : `${plan.volume || plan.volume_mb || bundleName}GB`;
 
       return `
-        <div class="bundle-card">
+        <div class="bundle-card${plan.available === false || plan.purchasable === false ? " out-of-stock" : ""}">
           <div class="card-header">
             <div class="bundle-icon"><i class="fas fa-wifi"></i></div>
             <div class="bundle-header-copy">
@@ -207,11 +209,11 @@
             </div>
           </div>
 
-          <div class="public-price">GHS ${total.toFixed(2)}</div>
+          <div class="public-price">${plan.available === false || plan.purchasable === false ? "Out of stock" : `GHS ${total.toFixed(2)}`}</div>
 
           <div class="card-actions">
-            <button onclick="openCheckout('${plan.id}')" class="btn-buy">
-              Buy now
+            <button onclick="openCheckout('${plan.id}')" class="btn-buy" ${plan.available === false || plan.purchasable === false ? "disabled" : ""}>
+              ${plan.available === false || plan.purchasable === false ? "Unavailable" : "Buy now"}
             </button>
           </div>
         </div>
@@ -228,7 +230,7 @@
       alert("This bundle is currently unavailable.");
       return;
     }
-    if (plan.purchasable === false) {
+    if (plan.available === false || plan.purchasable === false) {
       window.wimsNotice?.("Live bundles are temporarily unavailable. Please try again later.", "warning");
       return;
     }
@@ -236,9 +238,8 @@
     const baseAmount = Number(plan.price || plan.amount || plan.cost || plan.total || 0);
     const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0) + Number(plan.smsFee || 0);
     const total = Number(plan.sellingPrice || 0);
-    const volumeText = plan.volume_mb || plan.volume || plan.name || "1";
-    const parsedVolume = Number(String(volumeText).replace(/[^0-9.]/g, ""));
-    const pricePerGb = Number.isFinite(parsedVolume) && parsedVolume > 0 ? total / parsedVolume : total;
+    const volumeGb = Number(plan.volumeGb || 0);
+    const pricePerGb = Number.isFinite(volumeGb) && volumeGb > 0 ? total / volumeGb : total;
 
     currentPurchase = {
       user,
@@ -249,7 +250,7 @@
       total
     };
 
-    const bundleLabel = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
+    const bundleLabel = Number(plan.volumeGb) > 0 ? formatVolumeLabel(Number(plan.volumeGb)) : (plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`);
 
     document.getElementById("modal-bundle-name").textContent = bundleLabel;
     document.getElementById("modal-quantity").textContent = "1";

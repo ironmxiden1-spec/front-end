@@ -372,6 +372,11 @@
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.msg || "Unable to load settings");
         const form = document.getElementById("pricing-form");
+        if (form && !form.elements.namedItem("selectedProvider")) {
+            const label = document.createElement("label");
+            label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="sendcomms">SendComms</option></select>';
+            form.insertBefore(label, form.querySelector(".switch-label"));
+        }
         Object.entries(payload.settings || {}).forEach(([key, value]) => {
             const input = form?.elements.namedItem(key);
             if (input) input.type === "checkbox" ? input.checked = Boolean(value) : input.value = value;
