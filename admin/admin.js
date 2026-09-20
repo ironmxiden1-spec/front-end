@@ -387,7 +387,7 @@
         if (!response.ok) throw new Error(payload.msg || "Unable to load customers");
         const body = document.getElementById("customers-body");
         if (!body || !payload.data?.length) return;
-        body.innerHTML = payload.data.map((customer) => `<tr><td><strong>${customer.fullname || "—"}</strong></td><td>${customer.email || "—"}</td><td>GH₵ ${Number(customer.balance || 0).toFixed(2)}</td><td>${customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : "—"}</td></tr>`).join("");
+        body.innerHTML = payload.data.map((customer) => `<tr><td><strong>${customer.fullname || "—"}</strong></td><td>${customer.email || "—"}</td><td>GH₵ ${Number(customer.balance || 0).toFixed(2)}</td><td>${Number(customer.referralCount || 0)}</td><td>GH₵ ${Number(customer.referralCredits || 0).toFixed(2)}</td><td>${customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : "—"}</td></tr>`).join("");
     }
 
     async function loadSettings() {
@@ -398,6 +398,11 @@
         if (form && !form.elements.namedItem("selectedProvider")) {
             const label = document.createElement("label");
                 label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="reloadly">Reloadly</option></select>';
+            form.insertBefore(label, form.querySelector(".switch-label"));
+        }
+        if (form && !form.elements.namedItem("referralReward")) {
+            const label = document.createElement("label");
+            label.innerHTML = 'Referral reward <span>GH₵</span><input name="referralReward" type="number" min="0" step="0.01" value="0.10">';
             form.insertBefore(label, form.querySelector(".switch-label"));
         }
         Object.entries(payload.settings || {}).forEach(([key, value]) => {
