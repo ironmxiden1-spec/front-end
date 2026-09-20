@@ -13,7 +13,7 @@
 
     const labels = {
         dashboard: "Dashboard", orders: "Orders", bulk: "Bulk Purchase", comparison: "Provider Comparison",
-        providers: "Providers", wallets: "Provider Wallets", customers: "Customers", payments: "Payments",
+        providers: "Providers", checkers: "Result Checkers", wallets: "Provider Wallets", customers: "Customers", payments: "Payments",
         pricing: "Pricing", reports: "Profit & Reports", logs: "API & Webhook Logs", settings: "Settings", audit: "Audit Logs", retention: "Data Retention"
     };
 
@@ -40,6 +40,7 @@
         if (adminToken && selected === "comparison") loadComparison().catch((error) => showToast(error.message));
         if (adminToken && selected === "orders") loadOrders().catch((error) => showToast(error.message));
         if (adminToken && selected === "payments") loadPayments().catch((error) => showToast(error.message));
+        if (adminToken && selected === "checkers") loadCheckers().catch((error) => showToast(error.message));
     }
 
     document.querySelectorAll("[data-view]").forEach((element) => {
@@ -186,23 +187,11 @@
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.msg || "Unable to load providers");
         const statusById = Object.fromEntries((payload.providers || []).map((provider) => [provider.id, provider]));
-        const legacyProviderCard = [...document.querySelectorAll(".provider-card")].find((card) => card.querySelector("h2")?.textContent?.toLowerCase().includes("sendcomms"));
-        if (legacyProviderCard) {
-            legacyProviderCard.querySelector("h2").textContent = "Reloadly";
-            legacyProviderCard.querySelector("p").textContent = "Reloadly operator bundles and data delivery.";
-        }
-        const legacyWallet = document.querySelector('[data-wallet-provider="sendcomms"]');
-        if (legacyWallet) {
-            legacyWallet.dataset.walletProvider = "reloadly";
-            legacyWallet.querySelector("h2").textContent = "Reloadly";
-            legacyWallet.querySelector("p").textContent = "Live Reloadly account balance.";
-            legacyWallet.querySelector("small").textContent = "Refresh to retrieve";
-        }
         const comparisonHeader = [...document.querySelectorAll("#comparison-body")].map(() => document.querySelector("#comparison-body")?.closest("table")?.querySelectorAll("th")[3]).find(Boolean);
-        if (comparisonHeader) comparisonHeader.textContent = "Reloadly";
+        if (comparisonHeader) comparisonHeader.textContent = "DataMart";
         document.querySelectorAll(".provider-card").forEach((card) => {
             const name = card.querySelector("h2")?.textContent?.toLowerCase() || "";
-            const provider = name.includes("reseller") ? statusById.resellerxpress : name.includes("rema") ? statusById.remadata : statusById.reloadly;
+            const provider = name.includes("reseller") ? statusById.resellerxpress : name.includes("rema") ? statusById.remadata : statusById.datamart;
             if (!provider) return;
             const connection = card.querySelector(".connection");
             if (connection) { connection.textContent = provider.configured ? "Connected" : "Not configured"; connection.className = `connection ${provider.configured ? "online" : "offline"}`; }
@@ -238,6 +227,21 @@
         renderComparison();
         document.getElementById("comparison-updated").textContent = `Last verified update: ${new Date(payload.updatedAt || Date.now()).toLocaleTimeString()}`;
     }
+
+    async function loadCheckers() {
+        const container = document.getElementById("checker-products");
+        if (!container || !adminToken) return;
+        const response = await fetch(`${adminApiBase}/admin/checkers/products`, { headers: { "X-Admin-Token": adminToken } });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.msg || "Unable to load checker products");
+        const products = Array.isArray(payload.data) ? payload.data : [];
+        container.innerHTML = products.length ? products.map((product) => `<article class="panel checker-card"><div><p class="eyebrow">${product.inStock ? "IN STOCK" : "OUT OF STOCK"}</p><h2>${product.name || "Checker"}</h2><p>${product.description || "Result checker card"}</p></div><strong>GH₵ ${Number(product.price || 0).toFixed(2)}</strong><span>${Number(product.stockCount || 0).toLocaleString()} available</span></article>`).join("") : '<div class="panel empty-state"><strong>No checker products returned</strong><p>DataMart stock is currently unavailable.</p></div>';
+    }
+
+    document.getElementById("load-checkers-button")?.addEventListener("click", () => {
+        if (!adminToken) return showToast("Connect the admin API first.");
+        loadCheckers().then(() => showToast("Checker stock refreshed.")).catch((error) => showToast(error.message));
+    });
 
     async function loadBulkBundles() {
         const select = document.getElementById("bulk-bundle");
@@ -353,7 +357,7 @@
             body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><strong>No matching verified bundles</strong><p>Change the filters or connect more provider keys.</p></div></td></tr>';
             return;
         }
-        body.innerHTML = plans.map((plan) => `<tr><td><strong>${plan.network || "—"}</strong><br><small>${plan.name || plan.volume || "Bundle"}</small></td><td>${plan.provider === "resellerxpress" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "remadata" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "reloadly" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>GH₵ ${Number(plan.cost || plan.total).toFixed(2)}</td><td><strong>${plan.provider || "—"}</strong></td><td>GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</td><td>GH₵ ${Number(plan.expectedProfit || 0).toFixed(2)}</td></tr>`).join("");
+        body.innerHTML = plans.map((plan) => `<tr><td><strong>${plan.network || "—"}</strong><br><small>${plan.name || plan.volume || "Bundle"}</small></td><td>${plan.provider === "resellerxpress" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "remadata" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "datamart" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>GH₵ ${Number(plan.cost || plan.total).toFixed(2)}</td><td><strong>${plan.provider || "—"}</strong></td><td>GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</td><td>GH₵ ${Number(plan.expectedProfit || 0).toFixed(2)}</td></tr>`).join("");
     }
 
     function renderOrders() {
@@ -397,7 +401,7 @@
         const form = document.getElementById("pricing-form");
         if (form && !form.elements.namedItem("selectedProvider")) {
             const label = document.createElement("label");
-                label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="reloadly">Reloadly</option></select>';
+            label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="datamart">DataMart GH</option></select>';
             form.insertBefore(label, form.querySelector(".switch-label"));
         }
         if (form && !form.elements.namedItem("referralReward")) {
