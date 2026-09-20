@@ -36,9 +36,23 @@ function initializeAccount() {
     if (notLoggedInView) notLoggedInView.style.display = "none";
 
     populateAccountInfo(user);
+    setupReferral(user);
     setupProfileUpload(user);
     loadAccountData(user.email);
     setupLogout();
+}
+
+function setupReferral(user) {
+    const code = user.referralCode || `WIMPS-${String(user.id || user.email).replace(/[^a-z0-9]/gi, '').slice(-8).toUpperCase()}`;
+    const link = `${window.location.origin}/login-page.html?ref=${encodeURIComponent(code)}#signup`;
+    const linkInput = document.getElementById('referral-link');
+    const count = document.getElementById('referral-count');
+    if (linkInput) linkInput.value = link;
+    if (count) count.textContent = `${Number(user.referralCount || 0)} referrals`;
+    document.getElementById('copy-referral-link')?.addEventListener('click', async () => {
+        await navigator.clipboard?.writeText(link);
+        window.wimsNotice?.('Referral link copied.', 'success');
+    });
 }
 
 function setupProfileUpload(user) {

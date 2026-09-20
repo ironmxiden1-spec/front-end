@@ -7,10 +7,10 @@ const API_BASE = (() => {
     }
 
     return /localhost|127\.0\.0\.1/.test(window.location.hostname)
-        ? "http://localhost:5000"
-        : window.location.origin;
+        ? "http://localhost:5000/api"
+        : `${window.location.origin}/api`;
 })();
-const PAYSTACK_PUBLIC_KEY = PAYSTACK_CONFIG.PUBLIC_KEY;
+let PAYSTACK_PUBLIC_KEY = window.APP_CONFIG?.PAYSTACK_PUBLIC_KEY || "";
 
 let currentSupportAmount = 0;
 let currentSupportType = "";
@@ -33,7 +33,7 @@ function closeSupportModal() {
 // ===== SEND TO BACKEND =====
 async function sendDonation(reference, amount, email) {
     try {
-        const res = await fetch(`${API_BASE}/api/support/donate`, {
+        const res = await fetch(`${API_BASE}/support/donate`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -67,6 +67,15 @@ function payWithCard() {
 
     if (!window.PaystackPop) {
         alert("Paystack not loaded");
+        return;
+    }
+
+    if (!PAYSTACK_PUBLIC_KEY) {
+        fetch(`${API_BASE}/auth/config`).then((response) => response.json()).then((config) => {
+            PAYSTACK_PUBLIC_KEY = config.paystackPublicKey || "";
+            if (PAYSTACK_PUBLIC_KEY) payWithCard();
+            else alert("Paystack support payments are not configured");
+        }).catch(() => alert("Paystack support payments are unavailable"));
         return;
     }
 

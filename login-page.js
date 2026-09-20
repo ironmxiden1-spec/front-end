@@ -54,6 +54,9 @@
             fullname: user.fullname,
             email: user.email,
             balance: user.balance || 0,
+            referralCode: user.referralCode || "",
+            referralCount: user.referralCount || 0,
+            referralCredits: user.referralCredits || 0,
             createdAt: user.createdAt,
             authToken: user.authToken
         }));
@@ -167,6 +170,9 @@
                         fullname: data.user.fullname,
                         email: data.user.email,
                         balance: data.user.balance || 0,
+                        referralCode: data.user.referralCode || "",
+                        referralCount: data.user.referralCount || 0,
+                        referralCredits: data.user.referralCredits || 0,
                         createdAt: data.user.createdAt,
                         authToken: data.user.authToken
                     };
@@ -244,7 +250,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ fullname, email, password })
+                    body: JSON.stringify({ fullname, email, password, referralCode: new URLSearchParams(window.location.search).get("ref") || "" })
                 });
 
                 const data = await res.json();

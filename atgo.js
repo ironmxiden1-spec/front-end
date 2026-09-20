@@ -237,7 +237,9 @@
 
     const baseAmount = Number(plan.price || plan.amount || plan.cost || plan.total || 0);
     const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0) + Number(plan.smsFee || 0);
-    const total = Number(plan.sellingPrice || 0);
+    const grossTotal = Number(plan.sellingPrice || 0);
+    const referralDiscount = Math.min(Number(user.referralCredits || 0), grossTotal);
+    const total = Number((grossTotal - referralDiscount).toFixed(2));
     const volumeGb = Number(plan.volumeGb || 0);
     const pricePerGb = Number.isFinite(volumeGb) && volumeGb > 0 ? total / volumeGb : total;
 
@@ -248,6 +250,7 @@
       baseAmount,
       fee,
       total
+      ,referralDiscount
     };
 
     const bundleLabel = Number(plan.volumeGb) > 0 ? formatVolumeLabel(Number(plan.volumeGb)) : (plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`);

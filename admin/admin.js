@@ -139,7 +139,7 @@
         await waitForAdminBackend();
         const sources = [
             ["overview", loadOverview()], ["providers", loadProviders()], ["comparison", loadComparison()],
-            ["orders", loadOrders()], ["customers", loadCustomers()], ["settings", loadSettings()],
+            ["orders", loadOrders()], ["activity", loadActivity()], ["customers", loadCustomers()], ["settings", loadSettings()],
             ["bulk bundles", loadBulkBundles()], ["payments", loadPayments()]
         ];
         const results = await Promise.allSettled(sources.map(([, request]) => request));
@@ -186,9 +186,23 @@
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.msg || "Unable to load providers");
         const statusById = Object.fromEntries((payload.providers || []).map((provider) => [provider.id, provider]));
+        const legacyProviderCard = [...document.querySelectorAll(".provider-card")].find((card) => card.querySelector("h2")?.textContent?.toLowerCase().includes("sendcomms"));
+        if (legacyProviderCard) {
+            legacyProviderCard.querySelector("h2").textContent = "Reloadly";
+            legacyProviderCard.querySelector("p").textContent = "Reloadly operator bundles and data delivery.";
+        }
+        const legacyWallet = document.querySelector('[data-wallet-provider="sendcomms"]');
+        if (legacyWallet) {
+            legacyWallet.dataset.walletProvider = "reloadly";
+            legacyWallet.querySelector("h2").textContent = "Reloadly";
+            legacyWallet.querySelector("p").textContent = "Live Reloadly account balance.";
+            legacyWallet.querySelector("small").textContent = "Refresh to retrieve";
+        }
+        const comparisonHeader = [...document.querySelectorAll("#comparison-body")].map(() => document.querySelector("#comparison-body")?.closest("table")?.querySelectorAll("th")[3]).find(Boolean);
+        if (comparisonHeader) comparisonHeader.textContent = "Reloadly";
         document.querySelectorAll(".provider-card").forEach((card) => {
             const name = card.querySelector("h2")?.textContent?.toLowerCase() || "";
-            const provider = name.includes("reseller") ? statusById.resellerxpress : name.includes("rema") ? statusById.remadata : statusById.sendcomms;
+            const provider = name.includes("reseller") ? statusById.resellerxpress : name.includes("rema") ? statusById.remadata : statusById.reloadly;
             if (!provider) return;
             const connection = card.querySelector(".connection");
             if (connection) { connection.textContent = provider.configured ? "Connected" : "Not configured"; connection.className = `connection ${provider.configured ? "online" : "offline"}`; }
@@ -249,6 +263,15 @@
         loadedOrders = payload.data || [];
         renderOrders();
         renderDashboard();
+    }
+
+    async function loadActivity() {
+        const response = await fetch(`${adminApiBase}/admin/activity`, { headers: { "X-Admin-Token": adminToken } });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.msg || "Unable to load activity");
+        const body = document.getElementById("activity-body");
+        if (!body) return;
+        body.innerHTML = (payload.data || []).map((item) => `<tr><td>${item.activityType || "—"}</td><td>${item.email || "—"}</td><td>${item.bundle || item.referralCode || "—"}</td><td>${item.status || "—"}</td><td>${item.at ? new Date(item.at).toLocaleString() : "—"}</td></tr>`).join("") || '<tr><td colspan="5">No activity recorded.</td></tr>';
     }
 
     function orderNetwork(order) {
@@ -330,7 +353,7 @@
             body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><strong>No matching verified bundles</strong><p>Change the filters or connect more provider keys.</p></div></td></tr>';
             return;
         }
-        body.innerHTML = plans.map((plan) => `<tr><td><strong>${plan.network || "—"}</strong><br><small>${plan.name || plan.volume || "Bundle"}</small></td><td>${plan.provider === "resellerxpress" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "remadata" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "sendcomms" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>GH₵ ${Number(plan.cost || plan.total).toFixed(2)}</td><td><strong>${plan.provider || "—"}</strong></td><td>GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</td><td>GH₵ ${Number(plan.expectedProfit || 0).toFixed(2)}</td></tr>`).join("");
+        body.innerHTML = plans.map((plan) => `<tr><td><strong>${plan.network || "—"}</strong><br><small>${plan.name || plan.volume || "Bundle"}</small></td><td>${plan.provider === "resellerxpress" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "remadata" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>${plan.provider === "reloadly" ? `GH₵ ${Number(plan.price).toFixed(2)}` : "—"}</td><td>GH₵ ${Number(plan.cost || plan.total).toFixed(2)}</td><td><strong>${plan.provider || "—"}</strong></td><td>GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</td><td>GH₵ ${Number(plan.expectedProfit || 0).toFixed(2)}</td></tr>`).join("");
     }
 
     function renderOrders() {
@@ -374,7 +397,7 @@
         const form = document.getElementById("pricing-form");
         if (form && !form.elements.namedItem("selectedProvider")) {
             const label = document.createElement("label");
-            label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="sendcomms">SendComms</option></select>';
+                label.innerHTML = 'Provider shown to users <select name="selectedProvider"><option value="">Cheapest available</option><option value="resellerxpress">ResellerXpress</option><option value="remadata">RemaData</option><option value="reloadly">Reloadly</option></select>';
             form.insertBefore(label, form.querySelector(".switch-label"));
         }
         Object.entries(payload.settings || {}).forEach(([key, value]) => {
