@@ -15,6 +15,7 @@
         .customer-email-form select:focus,
         .customer-email-form input:focus,
         .customer-email-form textarea:focus { border-color: var(--green); outline: 0; box-shadow: 0 0 0 3px rgba(8, 122, 85, .12); }
+        .bulk-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
     </style>
 </head>
 <body>
@@ -120,6 +121,7 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="../config.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>

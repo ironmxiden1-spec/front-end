@@ -8,6 +8,8 @@
     let toastTimer;
     let comparisonPlans = [];
     let loadedOrders = [];
+    let bulkPlans = [];
+    let bulkNumbers = [];
     const adminApiBase = window.APP_CONFIG?.API_BASE || ((/localhost|127\.0\.0\.1/.test(window.location.hostname) || window.location.protocol === "file:") ? "http://localhost:5000/api" : "/api");
     let adminToken = sessionStorage.getItem("wimps-admin-token") || "";
 
@@ -263,7 +265,8 @@
             const response = await fetch(`${adminApiBase}/admin/comparison?network=${encodeURIComponent(network)}`, { headers: { "X-Admin-Token": adminToken } });
             const payload = await response.json();
             if (!response.ok) throw new Error(payload.msg || "Unable to load bundles");
-            select.innerHTML = payload.data?.length ? payload.data.map((plan) => `<option value="${plan.id}">${plan.name || plan.volume} · ${plan.provider} · GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</option>`).join("") : '<option value="">No active bundles returned by configured providers</option>';
+            bulkPlans = payload.data || [];
+            select.innerHTML = bulkPlans.length ? bulkPlans.map((plan) => `<option value="${plan.id}">${plan.name || plan.volume} · ${plan.provider} · GH₵ ${Number(plan.sellingPrice || 0).toFixed(2)}</option>`).join("") : '<option value="">No active bundles returned by configured providers</option>';
         } catch (error) {
             select.innerHTML = '<option value="">Bundles unavailable</option>';
             showToast(error.message);
@@ -544,9 +547,37 @@
             const response = await fetch(`${adminApiBase}/admin/bulk/validate`, { method: "POST", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ numbers }) });
             const data = await response.json();
             if (!response.ok) throw new Error(data.msg || "Validation failed");
+            bulkNumbers = data.valid || [];
             const summary = document.querySelector(".bulk-summary");
-            if (summary) summary.innerHTML = `<p class="eyebrow">BATCH SUMMARY</p><h2>Validation complete</h2><div class="summary-line"><span>Valid numbers</span><strong>${data.counts.valid}</strong></div><div class="summary-line"><span>Duplicates</span><strong>${data.counts.duplicates}</strong></div><div class="summary-line"><span>Invalid numbers</span><strong>${data.counts.invalid}</strong></div><button type="button" class="secondary-button" disabled>Pay with Paystack</button>`;
+            if (summary) summary.innerHTML = `<p class="eyebrow">BATCH SUMMARY</p><h2>Validation complete</h2><div class="summary-line"><span>Valid numbers</span><strong>${data.counts.valid}</strong></div><div class="summary-line"><span>Duplicates</span><strong>${data.counts.duplicates}</strong></div><div class="summary-line"><span>Invalid numbers</span><strong>${data.counts.invalid}</strong></div><div class="bulk-actions"><button type="button" class="secondary-button" id="bulk-free-button">Free delivery</button><button type="button" class="primary-button" id="bulk-paystack-button">Buy with Paystack</button></div>`;
+            document.getElementById("bulk-free-button")?.addEventListener("click", () => submitBulkPurchase("free"));
+            document.getElementById("bulk-paystack-button")?.addEventListener("click", () => submitBulkPurchase("paystack"));
             showToast("Bulk numbers validated.");
+        } catch (error) { showToast(error.message); }
+    }
+
+    async function submitBulkPurchase(mode, reference = "") {
+        if (!adminToken || !bulkNumbers.length) return showToast("Validate at least one phone number first.");
+        const network = document.getElementById("bulk-network").value;
+        const planId = document.getElementById("bulk-bundle").value;
+        const plan = bulkPlans.find((item) => String(item.id) === String(planId));
+        if (!plan) return showToast("Choose an available bundle first.");
+        const total = Number((Number(plan.sellingPrice || 0) * bulkNumbers.length).toFixed(2));
+        if (mode === "paystack" && !reference) {
+            try {
+                const configResponse = await fetch(`${adminApiBase}/auth/config`);
+                const config = await configResponse.json();
+                if (!config.paystackPublicKey || !window.PaystackPop) return showToast("Paystack is not available.");
+                const handler = window.PaystackPop.setup({ key: config.paystackPublicKey, email: "admin@admin.admin", amount: Math.round(total * 100), currency: "GHS", callback: (response) => submitBulkPurchase("paystack", response.reference), onClose: () => showToast("Paystack payment cancelled.") });
+                handler.openIframe();
+            } catch (error) { showToast("Unable to open Paystack."); }
+            return;
+        }
+        try {
+            const response = await fetch(`${adminApiBase}/admin/bulk/purchase`, { method: "POST", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ mode, network, planId, numbers: bulkNumbers, reference }) });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || "Bulk purchase failed");
+            showToast(data.msg || "Bulk purchase submitted.");
         } catch (error) { showToast(error.message); }
     }
 
