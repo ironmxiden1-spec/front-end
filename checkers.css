@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap');
 :root { --ink:#14231f; --muted:#70827a; --paper:#f3f7f3; --card:#fff; --line:#dce8e0; --green:#087a55; --mint:#dff3e8; }
 * { box-sizing:border-box; }
-body { margin:0; color:var(--ink); background:radial-gradient(circle at top right,#dcefe5 0,transparent 38%),var(--paper); font-family:Manrope,sans-serif; }
+body { margin:0; color:var(--ink); background:radial-gradient(circle at top right,#dcefe5 0,transparent 38%),rgba(18,116,67,.08); font-family:Manrope,sans-serif; }
 .checker-page { width:min(1080px,100%); margin:auto; padding:clamp(24px,6vw,72px) 20px; }
 .back-link { color:var(--green); font-size:12px; font-weight:700; text-decoration:none; }
 .checker-heading { max-width:650px; margin:52px 0 34px; }

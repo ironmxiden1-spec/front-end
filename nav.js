@@ -5,6 +5,25 @@
 
     if (!navbar || !menuButton) return;
 
+    const pageLinks = [
+        ["index.html", "Home"],
+        ["history.html", "History"],
+        ["checkers.html", "Result Checkers"],
+        ["mtn.html", "MTN"],
+        ["atgo.html", "AirtelTigo"],
+        ["telecel.html", "Telecel"],
+        ["about.html", "About"],
+        ["account.html", "Account"]
+    ];
+    const existingHrefs = new Set([...navbar.querySelectorAll("a")].map((link) => link.getAttribute("href")));
+    const closeItem = navbar.querySelector(".close-item");
+    pageLinks.forEach(([href, label]) => {
+        if (existingHrefs.has(href) || existingHrefs.has(`./${href}`)) return;
+        const item = document.createElement("li");
+        item.innerHTML = `<a href="${href}">${label}</a>`;
+        navbar.insertBefore(item, closeItem || null);
+    });
+
     const backdrop = document.createElement("div");
     backdrop.className = "menu-backdrop";
     backdrop.setAttribute("aria-hidden", "true");

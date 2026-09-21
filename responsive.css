@@ -1,6 +1,7 @@
 /* One responsive navigation and overflow layer for every page. */
 html,
 body {
+    background-color: rgba(18, 116, 67, 0.08) !important;
     max-width: 100%;
     overflow-x: hidden;
 }
@@ -146,19 +147,19 @@ iframe {
 }
 
 /* Provider bundle cards share one alignment system across MTN, ATgo, and Telecel. */
-.bundle-section .bundle-grid {
+.bundle-grid {
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
     align-items: stretch;
     gap: 18px;
 }
 
 @media (max-width: 520px) {
-    .bundle-section .bundle-grid {
+    .bundle-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px;
     }
 
-    .bundle-section .bundle-card {
+    .bundle-card {
         padding: 10px;
         border-radius: 12px;
     }
@@ -195,9 +196,23 @@ iframe {
 }
 
 @media (max-width: 760px) {
+    .bundle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 360px) {
     .bundle-section .bundle-grid {
-        grid-template-columns: 1fr !important;
-        gap: 14px;
+        gap: 7px;
+    }
+
+    .bundle-card {
+        padding: 8px;
+    }
+
+    .bundle-section .bundle-label {
+        font-size: 0.9rem;
     }
 }
 

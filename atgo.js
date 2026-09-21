@@ -193,7 +193,7 @@
 
     container.dataset.planCount = String(sortedPlans.length);
     container.innerHTML = sortedPlans.map((plan) => {
-      const total = Number(plan.sellingPrice || 0);
+      const providerPrice = Number(plan.price || plan.amount || plan.cost || 0);
       const bundleName = plan.name || `${plan.volume || plan.volume_mb || "Bundle"}`;
       const volumeGb = Number(plan.volumeGb);
       const publicBundleName = Number.isFinite(volumeGb) && volumeGb > 0
@@ -209,8 +209,7 @@
             </div>
           </div>
 
-          <div class="public-price">${plan.available === false || plan.purchasable === false ? "Out of stock" : `GHS ${total.toFixed(2)}`}</div>
-          <div class="provider-price">Provider price: GHS ${Number(plan.price || plan.amount || 0).toFixed(2)}</div>
+          <div class="public-price">${plan.available === false || plan.purchasable === false ? "Out of stock" : `API price: GHS ${providerPrice.toFixed(2)}`}</div>
 
           <div class="card-actions">
             <button onclick="openCheckout('${plan.id}')" class="btn-buy" ${plan.available === false || plan.purchasable === false ? "disabled" : ""}>
