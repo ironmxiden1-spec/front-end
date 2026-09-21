@@ -15,6 +15,28 @@ let PAYSTACK_PUBLIC_KEY = window.APP_CONFIG?.PAYSTACK_PUBLIC_KEY || "";
 let currentSupportAmount = 0;
 let currentSupportType = "";
 
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".faq-question").forEach((question) => {
+        question.setAttribute("role", "button");
+        question.setAttribute("tabindex", "0");
+
+        const toggleAnswer = () => {
+            const answer = question.nextElementSibling;
+            const isOpen = answer?.classList.toggle("show");
+            question.classList.toggle("active", isOpen);
+            question.setAttribute("aria-expanded", String(Boolean(isOpen)));
+        };
+
+        question.addEventListener("click", toggleAnswer);
+        question.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggleAnswer();
+            }
+        });
+    });
+});
+
 // ===== SUPPORT =====
 function supportDeveloper(amount, type) {
     currentSupportAmount = amount;
