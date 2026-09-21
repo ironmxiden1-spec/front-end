@@ -1,7 +1,6 @@
 /* One responsive navigation and overflow layer for every page. */
 html,
 body {
-    background-color: rgba(18, 116, 67, 0.08) !important;
     max-width: 100%;
     overflow-x: hidden;
 }
@@ -10,11 +9,6 @@ img,
 video,
 iframe {
     max-width: 100%;
-}
-
-.header {
-    background: rgba(12, 18, 16, 0.78) !important;
-    backdrop-filter: blur(12px);
 }
 
 .menu-backdrop {
@@ -195,8 +189,33 @@ iframe {
     width: 100%;
 }
 
+/* Keep repeated content compact and side-by-side across the site. */
+.bundles-grid,
+.content-grid,
+.benefits-grid,
+.support-grid,
+.methods-grid,
+.links-grid,
+.dashboard-grid,
+.steps-grid,
+.stats-cards,
+.detail-grid {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
+    gap: 14px;
+}
+
 @media (max-width: 760px) {
-    .bundle-grid {
+    .bundle-grid,
+    .bundles-grid,
+    .content-grid,
+    .benefits-grid,
+    .support-grid,
+    .methods-grid,
+    .links-grid,
+    .dashboard-grid,
+    .steps-grid,
+    .stats-cards,
+    .detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px;
     }
