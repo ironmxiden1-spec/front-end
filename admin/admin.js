@@ -13,7 +13,7 @@
 
     const labels = {
         dashboard: "Dashboard", orders: "Orders", bulk: "Bulk Purchase", comparison: "Provider Comparison",
-        providers: "Providers", checkers: "Result Checkers", wallets: "Provider Wallets", customers: "Customers", payments: "Payments",
+        providers: "Providers", checkers: "Result Checkers", wallets: "Provider Wallets", customers: "Customers", email: "Email Customers", payments: "Payments",
         pricing: "Pricing", reports: "Profit & Reports", logs: "API & Webhook Logs", settings: "Settings", audit: "Audit Logs", retention: "Data Retention"
     };
 
@@ -478,8 +478,7 @@
         const body = Object.fromEntries(new FormData(form).entries());
         body.handlingFees = Object.fromEntries(["mtn", "telecel", "airteltigo"].map((network) => [network, Number(body[`handlingFees.${network}`] || 0)]));
         ["mtn", "telecel", "airteltigo"].forEach((network) => delete body[`handlingFees.${network}`]);
-        body.neverBelowCost = form.elements.namedItem("neverBelowCost").checked;
-        body.autoProvider = form.elements.namedItem("autoProvider").checked;
+        body.autoProvider = Boolean(form.elements.namedItem("autoProvider")?.checked);
         try {
             const response = await fetch(`${adminApiBase}/admin/settings`, { method: "PUT", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify(body) });
             const data = await response.json();
@@ -487,6 +486,34 @@
             showToast("Pricing settings saved.");
         } catch (error) { showToast(error.message); }
     }
+
+    async function sendCustomerEmail() {
+        if (!adminToken) return showToast("Connect the admin API first.");
+        const form = document.getElementById("customer-email-form");
+        const recipients = form.elements.namedItem("recipients").value.split(/[\s,;]+/).map((email) => email.trim()).filter(Boolean);
+        const subject = form.elements.namedItem("subject").value.trim();
+        const message = form.elements.namedItem("message").value.trim();
+        const allCustomers = form.elements.namedItem("allCustomers").checked;
+        if ((!recipients.length && !allCustomers) || !subject || !message) return showToast("Choose recipients and complete all email fields.");
+        const button = form.querySelector("button[type=submit]");
+        button.disabled = true;
+        try {
+            const response = await fetch(`${adminApiBase}/admin/email`, { method: "POST", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ recipients, subject, message, allCustomers }) });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || "Unable to send customer email");
+            form.reset();
+            showToast(data.msg || "Customer email sent.");
+        } catch (error) {
+            showToast(error.message);
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    document.getElementById("customer-email-form")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        sendCustomerEmail();
+    });
 
     async function deleteTransactionHistory() {
         if (!adminToken) return showToast("Connect the admin API first.");
