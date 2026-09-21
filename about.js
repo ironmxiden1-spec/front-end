@@ -91,7 +91,7 @@ function payWithCard() {
         callback: function (response) {
             sendDonation(response.reference, currentSupportAmount, email);
 
-            alert("Donation successful!");
+            window.wimsNotice?.("Donation successful.", "success");
             closeSupportModal();
         },
 

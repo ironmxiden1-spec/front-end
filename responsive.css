@@ -11,6 +11,11 @@ iframe {
     max-width: 100%;
 }
 
+.header {
+    background: rgba(12, 18, 16, 0.78) !important;
+    backdrop-filter: blur(12px);
+}
+
 .menu-backdrop {
     display: none;
 }
@@ -142,9 +147,21 @@ iframe {
 
 /* Provider bundle cards share one alignment system across MTN, ATgo, and Telecel. */
 .bundle-section .bundle-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
     align-items: stretch;
     gap: 18px;
+}
+
+@media (max-width: 520px) {
+    .bundle-section .bundle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px;
+    }
+
+    .bundle-section .bundle-card {
+        padding: 10px;
+        border-radius: 12px;
+    }
 }
 
 .bundle-section .bundle-card {

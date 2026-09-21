@@ -17,6 +17,16 @@
         pricing: "Pricing", reports: "Profit & Reports", logs: "API & Webhook Logs", settings: "Settings", audit: "Audit Logs", retention: "Data Retention"
     };
 
+    const ordersPanel = document.querySelector('[data-panel="orders"]');
+    if (ordersPanel && !ordersPanel.querySelector('[data-action="delete-history"]')) {
+        const button = document.createElement("button");
+        button.className = "secondary-button";
+        button.dataset.action = "delete-history";
+        button.textContent = "Delete transaction history";
+        ordersPanel.querySelector(".page-heading")?.appendChild(button);
+        button.addEventListener("click", deleteTransactionHistory);
+    }
+
     function showToast(message) {
         toast.textContent = message;
         toast.classList.add("show");
@@ -72,6 +82,7 @@
             const action = button.dataset.action;
             if (action === "refresh" || action === "test-providers") adminToken ? loadAdminData(adminToken).then(() => showToast("Admin data refreshed.")).catch((error) => showToast(error.message)) : showToast("Connect the admin API first.");
             if (action === "save-settings") saveSettings();
+            if (action === "delete-history") deleteTransactionHistory();
             if (action === "validate-bulk") validateBulk();
             if (action === "export-orders") exportOrders();
             if (action === "export") showToast("Reports export requires a verified report endpoint.");
@@ -370,7 +381,13 @@
             const text = `${order.reference || ""} ${order.email || ""} ${order.phone || ""} ${order.bundle || ""}`.toLowerCase();
             return (!search || text.includes(search)) && (!status || order.status === status) && (!network || text.includes(network));
         });
-        body.innerHTML = orders.length ? orders.map((order) => `<tr><td>${order.reference || "—"}</td><td>${order.email || "—"}<br><small>${order.phone || "—"}</small></td><td>${order.bundle || "—"}</td><td>${order.provider || "—"}</td><td>GH₵ ${Number(order.amount || 0).toFixed(2)}</td><td>${order.status || "—"}</td><td>${order.date ? new Date(order.date).toLocaleString() : "—"}</td></tr>`).join("") : '<tr><td colspan="7"><div class="empty-state"><strong>No matching orders</strong></div></td></tr>';
+        body.innerHTML = orders.length ? orders.map((order) => `<tr><td>${order.reference || "—"}</td><td>${order.email || "—"}<br><small>${order.phone || "—"}</small></td><td>${order.bundle || "—"}</td><td>${order.provider || "—"}</td><td>GH₵ ${Number(order.amount || 0).toFixed(2)}</td><td>${order.status || "—"}</td><td>${order.date ? new Date(order.date).toLocaleString() : "—"}</td><td>${order.status === "pending" ? `<button class="secondary-button order-complete" data-order-id="${order._id || order.id}">Mark complete</button>` : "—"}</td></tr>`).join("") : '<tr><td colspan="8"><div class="empty-state"><strong>No matching orders</strong></div></td></tr>';
+        body.querySelectorAll(".order-complete").forEach((button) => button.addEventListener("click", async () => {
+            const response = await fetch(`${adminApiBase}/admin/orders/${button.dataset.orderId}/status`, { method: "PATCH", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ status: "completed" }) });
+            if (!response.ok) return showToast("Unable to mark order complete.");
+            await loadOrders();
+            showToast("Order marked complete.");
+        }));
     }
 
     function exportOrders() {
@@ -409,9 +426,24 @@
             label.innerHTML = 'Referral reward <span>GH₵</span><input name="referralReward" type="number" min="0" step="0.01" value="0.10">';
             form.insertBefore(label, form.querySelector(".switch-label"));
         }
+        if (form && !form.elements.namedItem("networkPricing.mtn")) {
+            const label = document.createElement("label");
+            label.innerHTML = 'MTN 1GB price <span>GH₵</span><input name="networkPricing.mtn" type="number" min="0" step="0.01" value="5">';
+            form.insertBefore(label, form.querySelector(".switch-label"));
+            ["telecel", "airteltigo"].forEach((network) => {
+                const networkLabel = label.cloneNode(true);
+                networkLabel.querySelector("input").name = `networkPricing.${network}`;
+                networkLabel.firstChild.textContent = `${network === "airteltigo" ? "AirtelTigo" : "Telecel"} 1GB price `;
+                form.insertBefore(networkLabel, form.querySelector(".switch-label"));
+            });
+        }
         Object.entries(payload.settings || {}).forEach(([key, value]) => {
             const input = form?.elements.namedItem(key);
             if (input) input.type === "checkbox" ? input.checked = Boolean(value) : input.value = value;
+        });
+        Object.entries(payload.settings?.networkPricing || {}).forEach(([network, value]) => {
+            const input = form?.elements.namedItem(`networkPricing.${network}`);
+            if (input) input.value = value;
         });
     }
 
@@ -444,6 +476,8 @@
         if (!adminToken) return showToast("Connect the admin API first.");
         const form = document.getElementById("pricing-form");
         const body = Object.fromEntries(new FormData(form).entries());
+        body.networkPricing = Object.fromEntries(["mtn", "telecel", "airteltigo"].map((network) => [network, Number(body[`networkPricing.${network}`] || 0)]));
+        ["mtn", "telecel", "airteltigo"].forEach((network) => delete body[`networkPricing.${network}`]);
         body.neverBelowCost = form.elements.namedItem("neverBelowCost").checked;
         body.autoProvider = form.elements.namedItem("autoProvider").checked;
         try {
@@ -452,6 +486,17 @@
             if (!response.ok) throw new Error(data.msg || "Unable to save settings");
             showToast("Pricing settings saved.");
         } catch (error) { showToast(error.message); }
+    }
+
+    async function deleteTransactionHistory() {
+        if (!adminToken) return showToast("Connect the admin API first.");
+        if (window.prompt('Type DELETE TRANSACTION HISTORY to confirm:') !== "DELETE TRANSACTION HISTORY") return;
+        const response = await fetch(`${adminApiBase}/admin/transactions`, { method: "DELETE", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ confirmation: "DELETE TRANSACTION HISTORY" }) });
+        const data = await response.json();
+        if (!response.ok) return showToast(data.msg || "Unable to delete transaction history.");
+        loadedOrders = [];
+        renderOrders();
+        showToast(`${data.deleted || 0} transactions deleted.`);
     }
 
     async function validateBulk() {

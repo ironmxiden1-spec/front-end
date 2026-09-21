@@ -164,7 +164,7 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert("Login successful");
+                    window.wimsNotice?.("Login successful.", "success");
                     const user = {
                         id: data.user.id,
                         fullname: data.user.fullname,
@@ -190,7 +190,7 @@
                         createdAt: DEMO_USERS[email].createdAt
                     };
                     localStorage.setItem("user", JSON.stringify(user));
-                    alert("Login successful");
+                    window.wimsNotice?.("Login successful.", "success");
                     window.location.href = "./account.html";
                     return;
                 }
@@ -207,7 +207,7 @@
                         createdAt: demoUser.createdAt
                     };
                     localStorage.setItem("user", JSON.stringify(user));
-                    alert("Login successful");
+                    window.wimsNotice?.("Login successful.", "success");
                     window.location.href = "./account.html";
                     return;
                 }
@@ -256,7 +256,7 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert("Account created successfully!");
+                    window.wimsNotice?.("Account created successfully.", "success");
                     signupBox.classList.remove('active');
                     loginBox.classList.add('active');
                     document.getElementById('email').value = email;

@@ -9,7 +9,9 @@ body { margin:0; color:var(--ink); background:radial-gradient(circle at top righ
 h1 { font-size:clamp(34px,6vw,64px); line-height:1; letter-spacing:-.04em; margin:12px 0 16px; }
 .checker-heading p:last-child { color:var(--muted); line-height:1.7; }
 .checker-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-.checker-card { display:grid; gap:18px; padding:26px; border:1px solid var(--line); border-radius:10px; background:var(--card); box-shadow:0 18px 44px rgba(29,75,55,.08); }
+.checker-nav { display:flex; flex-wrap:wrap; gap:18px; padding:12px 16px; margin-bottom:28px; border:1px solid rgba(220,232,224,.75); border-radius:10px; background:rgba(255,255,255,.62); backdrop-filter:blur(10px); }
+.checker-nav a { color:var(--ink); font-size:13px; font-weight:700; text-decoration:none; }
+.checker-card { display:grid; gap:18px; padding:26px; border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.78); box-shadow:0 18px 44px rgba(29,75,55,.08); backdrop-filter:blur(8px); }
 .checker-card h2 { margin:0; font-size:25px; }
 .checker-card p { color:var(--muted); line-height:1.6; margin:0; }
 .card-meta { display:flex; justify-content:space-between; align-items:end; gap:12px; padding-top:12px; border-top:1px solid var(--line); }
