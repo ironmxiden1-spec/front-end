@@ -7,8 +7,8 @@
         <div class="footer-column footer-contact">
             <h4>Contact</h4>
             <p><strong>Address:</strong> 134 Melcom Road, Street 14, Sokoban</p>
-            <p><strong>Phone:</strong> <a href="tel:+233597532120">(+233) 597 532 120</a></p>
-            <p><strong>Email:</strong> <a href="mailto:support@wimps.com">support@wimps.com</a></p>
+            <p><strong>Phone:</strong> <a href="tel:+233591095665">(233)591095665</a> / <a href="tel:+233249757771">(233)249757771</a></p>
+            <p><strong>Email:</strong> <a href="mailto:support@wimps.shop">support@wimps.shop</a><br><a href="mailto:wimps130@gmal.com">wimps130@gmal.com</a></p>
             <p><strong>Hours:</strong> 24/7, Mon - Sun</p>
             <div class="footer-follow">
                 <h4>Follow Us</h4>
@@ -27,7 +27,7 @@
             <a href="./history.html">Delivery Information</a>
             <a href="./about.html">Privacy Policy</a>
             <a href="./about.html">Terms &amp; Conditions</a>
-            <a href="mailto:support@wimps.com">Contact Us</a>
+            <a href="mailto:support@wimps.shop">Contact Us</a>
         </div>
 
         <div class="footer-column">
@@ -36,7 +36,7 @@
             <a href="./account.html">My Account</a>
             <a href="./history.html">View Orders</a>
             <a href="./history.html">Transaction History</a>
-            <a href="mailto:support@wimps.com">Help &amp; Support</a>
+            <a href="mailto:support@wimps.shop">Help &amp; Support</a>
         </div>
 
         <div class="footer-column footer-install">
