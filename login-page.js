@@ -60,17 +60,20 @@
         });
         const data = await response.json();
         if (!response.ok) return window.wimsNotice?.(data.msg || "Unable to start password reset.", "error");
-        if (!data.resetToken) return window.wimsNotice?.("Reset instructions could not be delivered. Contact support.", "warning");
+        window.wimsNotice?.(data.msg || "Check your email for a password reset link.", "success");
+    });
+
+    const resetParams = new URLSearchParams(window.location.search);
+    const resetToken = resetParams.get("reset");
+    const resetEmail = resetParams.get("email");
+    if (resetToken && resetEmail) {
         const password = window.prompt("Enter your new password (at least 6 characters):");
-        if (!password) return;
-        const resetResponse = await fetch(`${API_BASE}/auth/reset-password`, {
+        if (password) fetch(`${API_BASE}/auth/reset-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, token: data.resetToken, password })
-        });
-        const resetData = await resetResponse.json();
-        window.wimsNotice?.(resetData.msg || (resetResponse.ok ? "Password reset successful." : "Password reset failed."), resetResponse.ok ? "success" : "error");
-    });
+            body: JSON.stringify({ email: resetEmail, token: resetToken, password })
+        }).then((response) => response.json().then((data) => window.wimsNotice?.(data.msg || "Password reset complete.", response.ok ? "success" : "error")));
+    }
 
     const DEMO_USERS = {};
 

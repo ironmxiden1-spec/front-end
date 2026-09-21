@@ -426,14 +426,14 @@
             label.innerHTML = 'Referral reward <span>GH₵</span><input name="referralReward" type="number" min="0" step="0.01" value="0.10">';
             form.insertBefore(label, form.querySelector(".switch-label"));
         }
-        if (form && !form.elements.namedItem("networkPricing.mtn")) {
+        if (form && !form.elements.namedItem("handlingFees.mtn")) {
             const label = document.createElement("label");
-            label.innerHTML = 'MTN 1GB price <span>GH₵</span><input name="networkPricing.mtn" type="number" min="0" step="0.01" value="5">';
+            label.innerHTML = 'MTN handling fee <span>GH₵</span><input name="handlingFees.mtn" type="number" min="0" step="0.01" value="1">';
             form.insertBefore(label, form.querySelector(".switch-label"));
             ["telecel", "airteltigo"].forEach((network) => {
                 const networkLabel = label.cloneNode(true);
-                networkLabel.querySelector("input").name = `networkPricing.${network}`;
-                networkLabel.firstChild.textContent = `${network === "airteltigo" ? "AirtelTigo" : "Telecel"} 1GB price `;
+                networkLabel.querySelector("input").name = `handlingFees.${network}`;
+                networkLabel.firstChild.textContent = `${network === "airteltigo" ? "AirtelTigo" : "Telecel"} handling fee `;
                 form.insertBefore(networkLabel, form.querySelector(".switch-label"));
             });
         }
@@ -441,8 +441,8 @@
             const input = form?.elements.namedItem(key);
             if (input) input.type === "checkbox" ? input.checked = Boolean(value) : input.value = value;
         });
-        Object.entries(payload.settings?.networkPricing || {}).forEach(([network, value]) => {
-            const input = form?.elements.namedItem(`networkPricing.${network}`);
+        Object.entries(payload.settings?.handlingFees || {}).forEach(([network, value]) => {
+            const input = form?.elements.namedItem(`handlingFees.${network}`);
             if (input) input.value = value;
         });
     }
@@ -476,8 +476,8 @@
         if (!adminToken) return showToast("Connect the admin API first.");
         const form = document.getElementById("pricing-form");
         const body = Object.fromEntries(new FormData(form).entries());
-        body.networkPricing = Object.fromEntries(["mtn", "telecel", "airteltigo"].map((network) => [network, Number(body[`networkPricing.${network}`] || 0)]));
-        ["mtn", "telecel", "airteltigo"].forEach((network) => delete body[`networkPricing.${network}`]);
+        body.handlingFees = Object.fromEntries(["mtn", "telecel", "airteltigo"].map((network) => [network, Number(body[`handlingFees.${network}`] || 0)]));
+        ["mtn", "telecel", "airteltigo"].forEach((network) => delete body[`handlingFees.${network}`]);
         body.neverBelowCost = form.elements.namedItem("neverBelowCost").checked;
         body.autoProvider = form.elements.namedItem("autoProvider").checked;
         try {
