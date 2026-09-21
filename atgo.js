@@ -236,12 +236,12 @@
     }
 
     const baseAmount = Number(plan.price || plan.amount || plan.cost || plan.total || 0);
-    const fee = Number(plan.fee || plan.handling_fee || plan.service_fee || 0) + Number(plan.smsFee || 0);
     const grossTotal = Number(plan.sellingPrice || 0);
+    const fee = Math.max(0, grossTotal - baseAmount);
     const referralDiscount = Math.min(Number(user.referralCredits || 0), grossTotal);
     const total = Number((grossTotal - referralDiscount).toFixed(2));
     const volumeGb = Number(plan.volumeGb || 0);
-    const pricePerGb = Number.isFinite(volumeGb) && volumeGb > 0 ? total / volumeGb : total;
+    const pricePerGb = Number.isFinite(volumeGb) && volumeGb > 0 ? baseAmount / volumeGb : baseAmount;
 
     currentPurchase = {
       user,
@@ -258,7 +258,6 @@
     document.getElementById("modal-bundle-name").textContent = bundleLabel;
     document.getElementById("modal-quantity").textContent = "1";
     document.getElementById("modal-price-per-gb").textContent = `GHS ${pricePerGb.toFixed(2)}`;
-    document.getElementById("modal-base-amount").textContent = `GHS ${baseAmount.toFixed(2)}`;
     document.getElementById("modal-fee").textContent = `GHS ${fee.toFixed(2)}`;
     document.getElementById("modal-total").textContent = `GHS ${total.toFixed(2)}`;
 
