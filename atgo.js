@@ -209,7 +209,7 @@
             </div>
           </div>
 
-          <div class="public-price">${plan.available === false || plan.purchasable === false ? "Out of stock" : `API price: GHS ${providerPrice.toFixed(2)}`}</div>
+          <div class="public-price">${plan.available === false || plan.purchasable === false ? "Out of stock" : `GHS ${providerPrice.toFixed(2)}`}</div>
 
           <div class="card-actions">
             <button onclick="openCheckout('${plan.id}')" class="btn-buy" ${plan.available === false || plan.purchasable === false ? "disabled" : ""}>
