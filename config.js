@@ -11,6 +11,7 @@ window.wimsNotice = (message, type = "info") => {
 		window.setTimeout(() => notice.remove(), 250);
 	}, 4500);
 };
+window.wimsAlert = (message, type = "warning") => window.wimsNotice?.(message, type);
 const noticeStyle = document.createElement("style");
 noticeStyle.textContent = ".wims-notice{position:fixed;right:20px;bottom:20px;z-index:9999;max-width:min(380px,calc(100vw - 40px));padding:14px 18px;border-radius:10px;background:#172033;color:#fff;box-shadow:0 12px 30px #0003;font:600 14px/1.4 sans-serif;opacity:0;transform:translateY(12px);transition:opacity .25s,transform .25s}.wims-notice.is-visible{opacity:1;transform:translateY(0)}.wims-notice-success{background:#16794c}.wims-notice-error{background:#a83232}.wims-notice-warning{background:#9a6410}";
 document.head.appendChild(noticeStyle);

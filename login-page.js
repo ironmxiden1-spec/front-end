@@ -99,7 +99,7 @@
             const password = document.getElementById("password").value;
 
             if (!email || !password) {
-                alert("Please fill in all fields");
+                window.wimsAlert("Please fill in all fields.");
                 return;
             }
 
@@ -146,7 +146,7 @@
                     return;
                 }
 
-                alert(data.notice ? `${data.msg || "Login failed"}\n\n${data.notice}` : (data.msg || "Login failed"));
+                window.wimsAlert(data.notice ? `${data.msg || "Login failed"} ${data.notice}` : (data.msg || "Login failed"));
             } catch (err) {
                 const demoUser = DEMO_USERS[email];
                 if (demoUser && demoUser.password === password) {
@@ -164,7 +164,7 @@
                 }
 
                 console.error(err);
-                alert("Server error. Backend is unavailable right now.");
+                window.wimsAlert("The server is unavailable right now.");
             }
         });
     }
@@ -181,17 +181,17 @@
             const confirmPassword = document.getElementById('signup-confirm').value;
 
             if (!fullname || !email || !password || !confirmPassword) {
-                alert("Please fill in all fields");
+                window.wimsAlert("Please fill in all fields.");
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert("Passwords do not match!");
+                window.wimsAlert("Passwords do not match.");
                 return;
             }
 
             if (password.length < 6) {
-                alert("Password must be at least 6 characters");
+                window.wimsAlert("Password must be at least 6 characters.");
                 return;
             }
 
@@ -213,12 +213,12 @@
                     document.getElementById('email').value = email;
                     document.getElementById('email').focus();
                 } else {
-                    alert(data.msg || "Signup failed");
+                    window.wimsAlert(data.msg || "Signup failed.");
                 }
 
             } catch (err) {
                 console.error(err);
-                alert("Server error: " + err.message);
+                window.wimsAlert("The server is unavailable right now.");
             }
         });
     }

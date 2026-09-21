@@ -186,7 +186,7 @@ function setupAccountDepositButton() {
     depositBtn.addEventListener("click", async () => {
         const amount = Number(amountInput.value);
         if (!Number.isFinite(amount) || amount < 10) {
-            alert("Enter a valid amount: deposit GHS10 or more");
+            window.wimsAlert("Enter a valid deposit amount of at least GHS 10.");
             return;
         }
 

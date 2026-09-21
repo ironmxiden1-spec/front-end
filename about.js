@@ -88,7 +88,7 @@ function payWithCard() {
     }
 
     if (!window.PaystackPop) {
-        alert("Paystack not loaded");
+        window.wimsAlert("Paystack is not available right now.");
         return;
     }
 
@@ -96,8 +96,8 @@ function payWithCard() {
         fetch(`${API_BASE}/auth/config`).then((response) => response.json()).then((config) => {
             PAYSTACK_PUBLIC_KEY = config.paystackPublicKey || "";
             if (PAYSTACK_PUBLIC_KEY) payWithCard();
-            else alert("Paystack support payments are not configured");
-        }).catch(() => alert("Paystack support payments are unavailable"));
+            else window.wimsAlert("Paystack support payments are not configured.");
+        }).catch(() => window.wimsAlert("Paystack support payments are unavailable."));
         return;
     }
 

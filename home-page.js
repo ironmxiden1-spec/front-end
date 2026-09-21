@@ -23,7 +23,7 @@
             console.error("Payment configuration error:", error);
         }
 
-        if (!PAYSTACK_KEY) alert("Paystack is not configured on the server");
+        if (!PAYSTACK_KEY) window.wimsAlert("Paystack is not configured on the server.");
         return Boolean(PAYSTACK_KEY);
     }
 
@@ -43,13 +43,13 @@
     async function openPaystackDeposit(amountOverride) {
         const user = getUser();
         if (!user || !user.email) {
-            alert('Login first');
+            window.wimsAlert("Please log in first.");
             return;
         }
 
         const depositAmount = Number(amountOverride || prompt('Enter deposit amount in GHS', '10'));
         if (!Number.isFinite(depositAmount) || depositAmount < 10) {
-            alert('Enter a valid amount: deposit GHS10 or more');
+            window.wimsAlert("Enter a valid deposit amount of at least GHS 10.");
             return;
         }
 
@@ -93,7 +93,7 @@
                 })();
             },
             onClose: function() {
-                alert('Transaction cancelled');
+                window.wimsAlert("Transaction cancelled.");
             }
         });
 
@@ -194,7 +194,7 @@
                 const email = form.querySelector('input[type="email"]');
 
                 if (email && email.value) {
-                    alert('Thank you for subscribing! Check your email for special offers.');
+                    window.wimsNotice?.("Thank you for subscribing. Check your email for special offers.", "success");
                     form.reset();
                 }
             });

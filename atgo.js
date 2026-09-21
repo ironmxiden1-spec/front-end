@@ -23,7 +23,7 @@
       console.error("Payment configuration error:", error);
     }
 
-    if (!PAYSTACK_KEY) alert("Paystack is not configured on the server");
+    if (!PAYSTACK_KEY) window.wimsAlert("Paystack is not configured on the server.");
     return Boolean(PAYSTACK_KEY);
   }
 
@@ -227,7 +227,7 @@
 
     const plan = latestPlans.find((item) => String(item.id) === String(planId));
     if (!plan) {
-      alert("This bundle is currently unavailable.");
+      window.wimsAlert("This bundle is currently unavailable.");
       return;
     }
     if (plan.available === false || plan.purchasable === false) {
@@ -312,7 +312,7 @@
       loadBundleOffers();
     } catch (err) {
       console.error(err);
-      alert("Network error while processing purchase");
+      window.wimsAlert("Network error while processing the purchase.");
     }
   }
 
@@ -378,7 +378,7 @@
       },
 
       onClose: function() {
-        alert("Transaction cancelled");
+        window.wimsAlert("Transaction cancelled.");
       }
     });
 
@@ -389,11 +389,11 @@
     const user = getUser();
     const amountEl = document.getElementById("deposit-amount");
 
-    if (!user) return alert("Login first");
-    if (!amountEl) return alert("Amount input missing");
+    if (!user) return window.wimsAlert("Please log in first.");
+    if (!amountEl) return window.wimsAlert("The amount field is unavailable.");
 
     const amount = Number(amountEl.value);
-    if (!amount || amount < 10) return alert("Enter a valid amount: deposit GHS10 or more");
+    if (!amount || amount < 10) return window.wimsAlert("Enter a valid deposit amount of at least GHS 10.");
 
     if (!(await ensurePaymentConfig())) return;
 
@@ -441,7 +441,7 @@
       },
 
       onClose: function() {
-        alert("Transaction cancelled");
+        window.wimsAlert("Transaction cancelled.");
       }
     });
 

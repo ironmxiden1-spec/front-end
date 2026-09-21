@@ -517,13 +517,17 @@
 
     async function deleteTransactionHistory() {
         if (!adminToken) return showToast("Connect the admin API first.");
-        if (window.prompt('Type DELETE TRANSACTION HISTORY to confirm:') !== "DELETE TRANSACTION HISTORY") return;
-        const response = await fetch(`${adminApiBase}/admin/transactions`, { method: "DELETE", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ confirmation: "DELETE TRANSACTION HISTORY" }) });
-        const data = await response.json();
-        if (!response.ok) return showToast(data.msg || "Unable to delete transaction history.");
-        loadedOrders = [];
-        renderOrders();
-        showToast(`${data.deleted || 0} transactions deleted.`);
+        if (!window.confirm("Delete all customer transaction history? This cannot be undone.")) return;
+        try {
+            const response = await fetch(`${adminApiBase}/admin/transactions`, { method: "DELETE", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ confirmation: "DELETE TRANSACTION HISTORY" }) });
+            const data = await response.json();
+            if (!response.ok) return showToast(data.msg || "Unable to delete transaction history.");
+            loadedOrders = [];
+            renderOrders();
+            showToast(`${data.deleted || 0} transactions deleted.`);
+        } catch (error) {
+            showToast("Transaction history could not be deleted.");
+        }
     }
 
     async function validateBulk() {
