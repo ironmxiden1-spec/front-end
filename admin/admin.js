@@ -503,11 +503,19 @@
         const subject = form.elements.namedItem("subject").value.trim();
         const message = form.elements.namedItem("message").value.trim();
         const allCustomers = form.elements.namedItem("allCustomers").checked;
+        const files = [...form.elements.namedItem("attachments").files];
         if ((!recipients.length && !allCustomers) || !subject || !message) return showToast("Choose recipients and complete all email fields.");
+        if (files.some((file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024)) return showToast("Each attachment must be an image no larger than 5 MB.");
         const button = form.querySelector("button[type=submit]");
         button.disabled = true;
         try {
-            const response = await fetch(`${adminApiBase}/admin/email`, { method: "POST", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ recipients, subject, message, allCustomers }) });
+            const attachments = await Promise.all(files.map((file) => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({ filename: file.name, contentType: file.type, content: String(reader.result).split(",")[1] });
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            })));
+            const response = await fetch(`${adminApiBase}/admin/email`, { method: "POST", headers: { "Content-Type": "application/json", "X-Admin-Token": adminToken }, body: JSON.stringify({ recipients, subject, message, allCustomers, attachments }) });
             const data = await response.json();
             if (!response.ok) throw new Error(data.msg || "Unable to send customer email");
             form.reset();
