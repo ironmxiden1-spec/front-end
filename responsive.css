@@ -191,6 +191,7 @@ iframe {
 
 /* Keep repeated content compact and side-by-side across the site. */
 .bundles-grid,
+.stats-section,
 .content-grid,
 .benefits-grid,
 .support-grid,
@@ -207,6 +208,7 @@ iframe {
 @media (max-width: 760px) {
     .bundle-grid,
     .bundles-grid,
+    .stats-section,
     .content-grid,
     .benefits-grid,
     .support-grid,
@@ -218,6 +220,31 @@ iframe {
     .detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px;
+    }
+
+    .stats-section {
+        padding: 24px 14px !important;
+    }
+
+    .stats-section .stat {
+        min-width: 0;
+        padding: 14px 8px;
+        gap: 8px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stats-section .stat-icon {
+        font-size: 25px;
+    }
+
+    .stats-section .stat-content h3 {
+        font-size: 20px;
+    }
+
+    .stats-section .stat-content p {
+        font-size: 11px;
+        white-space: nowrap;
     }
 }
 
