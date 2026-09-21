@@ -1,6 +1,5 @@
 .bundle-card.out-of-stock { opacity: .72; filter: grayscale(.35); }
 .bundle-card.out-of-stock .btn-buy { cursor: not-allowed; opacity: .65; }
-.provider-price { color: #a9a9a9; font-size: 0.78rem; }
 @import url('https://fonts.googleapis.com/css2?family=spartan:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
