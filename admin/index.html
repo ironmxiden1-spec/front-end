@@ -6,6 +6,16 @@
     <meta name="description" content="WIMPS operations dashboard">
     <title>WIMPS Admin</title>
     <link rel="stylesheet" href="admin.css">
+    <style>
+        .customer-email-form { max-width: 760px; gap: 20px; }
+        .customer-email-form select,
+        .customer-email-form textarea { display: block; width: 100%; margin-top: 7px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fbfdfc; color: var(--ink); line-height: 1.6; }
+        .customer-email-form select[multiple] { min-height: 190px; }
+        .customer-email-form .customer-message { min-height: 220px; resize: vertical; }
+        .customer-email-form select:focus,
+        .customer-email-form input:focus,
+        .customer-email-form textarea:focus { border-color: var(--green); outline: 0; box-shadow: 0 0 0 3px rgba(8, 122, 85, .12); }
+    </style>
 </head>
 <body>
     <div class="app-shell">
@@ -89,7 +99,7 @@
 
             <section class="view generic-view" data-panel="customers"><div class="page-heading"><div><p class="eyebrow">CUSTOMER CARE</p><h1>Customers</h1><p class="muted">Authenticated customer directory.</p></div></div><div class="table-panel"><div class="responsive-table"><table><thead><tr><th>Name</th><th>Email</th><th>Balance</th><th>Referrals</th><th>Referral credit</th><th>Member since</th></tr></thead><tbody id="customers-body"><tr><td colspan="6"><div class="empty-state"><span class="empty-icon">◎</span><strong>Connect the admin API</strong><p>Use the dashboard Connect button to load customers.</p></div></td></tr></tbody></table></div></div></section>
 
-            <section class="view generic-view" data-panel="email"><div class="page-heading"><div><p class="eyebrow">CUSTOMER CARE</p><h1>Email customers</h1><p class="muted">Send a message to selected customers or your full customer list.</p></div></div><form class="panel settings-form" id="customer-email-form"><label>Recipient emails <span>Separate with commas or spaces</span><textarea name="recipients" rows="4" placeholder="customer@example.com"></textarea></label><label class="switch-label">Send to all customers <input name="allCustomers" type="checkbox"><span class="switch"></span></label><label>Subject<input name="subject" type="text" required></label><label>Message<textarea name="message" rows="9" required></textarea></label><button type="submit" class="primary-button" data-action="send-email">Send email</button></form></section>
+            <section class="view generic-view" data-panel="email"><div class="page-heading"><div><p class="eyebrow">CUSTOMER CARE</p><h1>Email customers</h1><p class="muted">Choose one customer, several customers, or the full customer list.</p></div></div><form class="panel settings-form customer-email-form" id="customer-email-form"><label>Choose customers <span>Use Ctrl/Cmd to select several</span><select name="recipients" multiple size="8"><option value="">Connect the admin API to load customers</option></select></label><label class="switch-label">Send to all customers <input name="allCustomers" type="checkbox"><span class="switch"></span></label><label>Subject<input name="subject" type="text" required placeholder="Subject"></label><label>Message<textarea class="customer-message" name="message" rows="10" required placeholder="Write your message here..."></textarea></label><button type="submit" class="primary-button" data-action="send-email">Send email</button></form></section>
             <section class="view generic-view" data-panel="payments"><div class="page-heading"><div><p class="eyebrow">PAYSTACK</p><h1>Payments</h1><p class="muted">Payment records from the protected transaction store.</p></div></div><div class="table-panel"><div class="responsive-table"><table><thead><tr><th>Reference</th><th>Customer</th><th>Method</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="payments-body"><tr><td colspan="6"><div class="empty-state"><span class="empty-icon">₵</span><strong>Connect the admin API</strong><p>Payment records will load after authentication.</p></div></td></tr></tbody></table></div></div></section>
             <section class="view generic-view" data-panel="activity"><div class="page-heading"><div><p class="eyebrow">LIVE AUDIT</p><h1>Activity</h1><p class="muted">Accounts, referrals, deposits, purchases, and delivery activity.</p></div></div><div class="table-panel"><div class="responsive-table"><table><thead><tr><th>Activity</th><th>Customer</th><th>Reference / referral</th><th>Status</th><th>Date</th></tr></thead><tbody id="activity-body"><tr><td colspan="5">Connect the admin API to load activity.</td></tr></tbody></table></div></div></section>
             <section class="view generic-view" data-panel="logs"><div class="page-heading"><div><p class="eyebrow">OBSERVABILITY</p><h1>API &amp; webhook logs</h1><p class="muted">Sensitive keys and passwords are never shown here.</p></div></div><div class="panel full-empty empty-state"><span class="empty-icon">≋</span><strong>No logs loaded</strong><p>Connect secured log endpoints to inspect provider latency and webhook events.</p></div></section>

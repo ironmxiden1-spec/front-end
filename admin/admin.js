@@ -407,6 +407,12 @@
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.msg || "Unable to load customers");
         const body = document.getElementById("customers-body");
+        const recipientSelect = document.querySelector('#customer-email-form select[name="recipients"]');
+        if (recipientSelect) {
+            recipientSelect.innerHTML = payload.data?.length
+                ? payload.data.filter((customer) => customer.email).map((customer) => `<option value="${customer.email}">${customer.fullname || "Customer"} · ${customer.email}</option>`).join("")
+                : '<option value="">No customer emails available</option>';
+        }
         if (!body || !payload.data?.length) return;
         body.innerHTML = payload.data.map((customer) => `<tr><td><strong>${customer.fullname || "—"}</strong></td><td>${customer.email || "—"}</td><td>GH₵ ${Number(customer.balance || 0).toFixed(2)}</td><td>${Number(customer.referralCount || 0)}</td><td>GH₵ ${Number(customer.referralCredits || 0).toFixed(2)}</td><td>${customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : "—"}</td></tr>`).join("");
     }
@@ -490,7 +496,7 @@
     async function sendCustomerEmail() {
         if (!adminToken) return showToast("Connect the admin API first.");
         const form = document.getElementById("customer-email-form");
-        const recipients = form.elements.namedItem("recipients").value.split(/[\s,;]+/).map((email) => email.trim()).filter(Boolean);
+        const recipients = [...form.elements.namedItem("recipients").selectedOptions].map((option) => option.value).filter(Boolean);
         const subject = form.elements.namedItem("subject").value.trim();
         const message = form.elements.namedItem("message").value.trim();
         const allCustomers = form.elements.namedItem("allCustomers").checked;
