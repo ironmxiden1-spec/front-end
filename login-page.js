@@ -34,20 +34,6 @@
             : "/api";
     })();
 
-    let authConfig = null;
-
-    async function loadAuthConfig() {
-        try {
-            const response = await fetch(`${API_BASE}/auth/config`);
-            authConfig = await response.json();
-            initializeGoogleButtons();
-        } catch (error) {
-            console.error("Unable to load auth configuration", error);
-            authConfig = {};
-            initializeGoogleButtons();
-        }
-    }
-
     function saveAuthenticatedUser(user) {
         localStorage.setItem("user", JSON.stringify({
             id: user.id,
@@ -63,65 +49,27 @@
         window.location.href = "./account.html";
     }
 
-    async function handleGoogleCredential(response) {
-        try {
-            const result = await fetch(`${API_BASE}/auth/google`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ credential: response.credential })
-            });
-            const data = await result.json();
-            if (!result.ok) return alert(data.msg || "Google sign-in failed");
-            saveAuthenticatedUser(data.user);
-        } catch (error) {
-            console.error(error);
-            alert("Google sign-in is unavailable right now");
-        }
-    }
-
-    function initializeGoogleButtons() {
-        const containers = ["google-login-button", "google-signup-button"]
-            .map((id) => document.getElementById(id))
-            .filter(Boolean);
-
-        if (!authConfig?.googleClientId || !window.google?.accounts?.id) {
-            containers.forEach((container) => {
-                if (container.childElementCount) return;
-                const button = document.createElement("button");
-                button.type = "button";
-                button.className = "google-fallback-button";
-                button.innerHTML = '<i class="fab fa-google"></i> Continue with Google';
-                button.addEventListener("click", () => alert("Google sign-in is not configured on the server yet"));
-                container.appendChild(button);
-            });
-            return;
-        }
-
-        window.google.accounts.id.initialize({
-            client_id: authConfig.googleClientId,
-            callback: handleGoogleCredential
+    document.getElementById("forgot-password-link")?.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const email = window.prompt("Enter your account email:");
+        if (!email) return;
+        const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
         });
-
-        containers.forEach((container) => {
-            container.replaceChildren();
-            window.google.accounts.id.renderButton(container, {
-                theme: "outline",
-                size: "large",
-                width: 360,
-                text: "continue_with"
-            });
+        const data = await response.json();
+        if (!response.ok) return window.wimsNotice?.(data.msg || "Unable to start password reset.", "error");
+        if (!data.resetToken) return window.wimsNotice?.("Reset instructions could not be delivered. Contact support.", "warning");
+        const password = window.prompt("Enter your new password (at least 6 characters):");
+        if (!password) return;
+        const resetResponse = await fetch(`${API_BASE}/auth/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, token: data.resetToken, password })
         });
-    }
-
-    window.addEventListener("load", () => {
-        loadAuthConfig();
-        const googleWait = window.setInterval(() => {
-            if (authConfig?.googleClientId && window.google?.accounts?.id) {
-                window.clearInterval(googleWait);
-                initializeGoogleButtons();
-            }
-        }, 250);
-        window.setTimeout(() => window.clearInterval(googleWait), 10000);
+        const resetData = await resetResponse.json();
+        window.wimsNotice?.(resetData.msg || (resetResponse.ok ? "Password reset successful." : "Password reset failed."), resetResponse.ok ? "success" : "error");
     });
 
     const DEMO_USERS = {};
