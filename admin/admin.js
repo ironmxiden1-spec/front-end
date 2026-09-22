@@ -163,19 +163,27 @@
     }
 
     async function waitForAdminBackend() {
-        let lastError = "Backend is starting...";
-        for (let attempt = 0; attempt < 15; attempt += 1) {
-            try {
-                const response = await fetch(`${adminApiBase}/admin/providers`, { headers: { "X-Admin-Token": adminToken } });
-                if (response.ok) return;
-                const payload = await response.json().catch(() => ({}));
-                lastError = payload.msg || `Backend returned HTTP ${response.status}`;
-            } catch (error) {
-                lastError = "Backend is still starting...";
+        let lastError = "Admin API is unavailable right now.";
+
+        try {
+            const response = await fetch(`${adminApiBase}/admin/providers`, { headers: { "X-Admin-Token": adminToken } });
+
+            if (response.ok) return;
+
+            const payload = await response.json().catch(() => ({}));
+            if (response.status === 401 || /admin authentication required|invalid.*token/i.test(payload.msg || "")) {
+                throw new Error("Admin API token is invalid or expired. Enter the correct token and try again.");
             }
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            lastError = payload.msg || `Admin API returned HTTP ${response.status}`;
+        } catch (error) {
+            if (error instanceof Error && /Admin API token is invalid or expired/i.test(error.message)) {
+                throw error;
+            }
+            lastError = error?.message || "The admin backend is not reachable right now.";
         }
-        throw new Error(`${lastError} Start the backend with npm start and try again.`);
+
+        throw new Error(`${lastError} Check that the backend is running and try again.`);
     }
 
     async function loadOverview() {
