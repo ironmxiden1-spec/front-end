@@ -33,6 +33,22 @@
     <!-- Auth Container -->
     <div class="auth-container">
         <div class="auth-box">
+            <div id="auth-modal" class="auth-modal hidden" aria-hidden="true">
+                <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+                    <button type="button" class="auth-modal-close" id="auth-modal-close" aria-label="Close">&times;</button>
+                    <h3 id="auth-modal-title">Reset password</h3>
+                    <p id="auth-modal-text">We’ll email you a secure reset link.</p>
+                    <form id="auth-modal-form">
+                        <label id="auth-modal-label" for="auth-modal-input">Email address</label>
+                        <input id="auth-modal-input" type="email" placeholder="you@example.com" required>
+                        <input id="auth-modal-password" class="hidden" type="password" placeholder="New password" minlength="6">
+                        <div class="auth-modal-actions">
+                            <button type="button" class="btn-secondary" id="auth-modal-cancel">Cancel</button>
+                            <button type="submit" class="btn-submit btn-modal">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <!-- Login Form -->
             <div class="form-box login-form active">
                 <h2>Login</h2>

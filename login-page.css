@@ -105,6 +105,100 @@ img[src=""], img:not([src]) {
     overflow: hidden;
 }
 
+.auth-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 12, 10, 0.7);
+    z-index: 1200;
+    padding: 20px;
+}
+
+.auth-modal.hidden {
+    display: none;
+}
+
+.auth-modal-card {
+    width: min(420px, 100%);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.25);
+    padding: 28px 24px 20px;
+    position: relative;
+    color: #1e1e1e;
+}
+
+.auth-modal-card h3 {
+    margin-bottom: 10px;
+    color: #1b1b1b;
+    font-size: 22px;
+}
+
+.auth-modal-card p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.auth-modal-card label {
+    display: block;
+    font-size: 12px;
+    color: #555;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.auth-modal-card input {
+    width: 100%;
+    border: 1px solid #dfe7dc;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    background: #fff;
+    color: #1d1d1d;
+}
+
+.auth-modal-card input.hidden {
+    display: none;
+}
+
+.auth-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    cursor: pointer;
+    color: #555;
+}
+
+.btn-secondary {
+    border: 1px solid #dfe7dc;
+    background: #fff;
+    color: #1d1d1d;
+    border-radius: 8px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btn-modal {
+    width: auto;
+    padding: 11px 18px;
+}
+
 .form-box {
     display: none;
     animation: fadeIn 0.4s ease-in;

@@ -49,30 +49,110 @@
         window.location.href = "./account.html";
     }
 
+    const authModal = document.getElementById("auth-modal");
+    const authModalTitle = document.getElementById("auth-modal-title");
+    const authModalText = document.getElementById("auth-modal-text");
+    const authModalLabel = document.getElementById("auth-modal-label");
+    const authModalInput = document.getElementById("auth-modal-input");
+    const authModalPassword = document.getElementById("auth-modal-password");
+    const authModalForm = document.getElementById("auth-modal-form");
+    const authModalClose = document.getElementById("auth-modal-close");
+    const authModalCancel = document.getElementById("auth-modal-cancel");
+
+    function closeAuthModal() {
+        authModal?.classList.add("hidden");
+        authModal?.setAttribute("aria-hidden", "true");
+        if (authModalForm) authModalForm.dataset.action = "";
+    }
+
+    function openAuthModal({ title, text, label, placeholder, action, inputType = "email", buttonText = "Submit" }) {
+        if (!authModal || !authModalTitle || !authModalText || !authModalLabel || !authModalInput || !authModalPassword || !authModalForm) return;
+        authModalTitle.textContent = title;
+        authModalText.textContent = text;
+        authModalLabel.textContent = label;
+        authModalInput.type = inputType;
+        authModalInput.placeholder = placeholder;
+        authModalInput.value = "";
+        authModalPassword.value = "";
+        authModalPassword.classList.toggle("hidden", action !== "reset");
+        authModalPassword.setAttribute("placeholder", "New password");
+        authModalPassword.type = "password";
+        authModalInput.classList.toggle("hidden", action === "reset");
+        authModalForm.dataset.action = action;
+        const submitButton = authModalForm.querySelector("button[type='submit']");
+        if (submitButton) submitButton.textContent = buttonText;
+        authModal.classList.remove("hidden");
+        authModal.setAttribute("aria-hidden", "false");
+    }
+
+    authModalClose?.addEventListener("click", closeAuthModal);
+    authModalCancel?.addEventListener("click", closeAuthModal);
+    authModal?.addEventListener("click", (event) => {
+        if (event.target === authModal) closeAuthModal();
+    });
+
     document.getElementById("forgot-password-link")?.addEventListener("click", async (event) => {
         event.preventDefault();
-        const email = window.prompt("Enter your account email:");
-        if (!email) return;
-        const response = await fetch(`${API_BASE}/auth/forgot-password`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email })
+        openAuthModal({
+            title: "Reset password",
+            text: "Enter the email address linked to your account and we’ll send a reset link.",
+            label: "Email address",
+            placeholder: "you@example.com",
+            action: "forgot",
+            buttonText: "Send link"
         });
-        const data = await response.json();
-        if (!response.ok) return window.wimsNotice?.(data.msg || "Unable to start password reset.", "error");
-        window.wimsNotice?.(data.msg || "Check your email for a password reset link.", "success");
+    });
+
+    authModalForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const action = authModalForm.dataset.action;
+        if (action === "forgot") {
+            const email = String(authModalInput.value || "").trim();
+            if (!email) return window.wimsAlert("Please enter your email address.");
+            const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+            closeAuthModal();
+            if (!response.ok) return window.wimsNotice?.(data.msg || "Unable to start password reset.", "error");
+            window.wimsNotice?.(data.msg || "Check your email for a password reset link.", "success");
+            return;
+        }
+
+        if (action === "reset") {
+            const password = String(authModalPassword.value || "").trim();
+            const resetEmail = new URLSearchParams(window.location.search).get("email") || "";
+            const token = new URLSearchParams(window.location.search).get("reset") || "";
+            if (!password || password.length < 6) return window.wimsAlert("Password must be at least 6 characters.");
+            if (!token || !resetEmail) return window.wimsAlert("The reset link is missing required information.");
+            const response = await fetch(`${API_BASE}/auth/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: resetEmail, token, password })
+            });
+            const data = await response.json();
+            closeAuthModal();
+            if (!response.ok) return window.wimsNotice?.(data.msg || "Password reset failed.", "error");
+            window.wimsNotice?.(data.msg || "Password reset complete.", "success");
+            setTimeout(() => window.location.href = "./login-page.html#login", 800);
+        }
     });
 
     const resetParams = new URLSearchParams(window.location.search);
     const resetToken = resetParams.get("reset");
     const resetEmail = resetParams.get("email");
     if (resetToken && resetEmail) {
-        const password = window.prompt("Enter your new password (at least 6 characters):");
-        if (password) fetch(`${API_BASE}/auth/reset-password`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: resetEmail, token: resetToken, password })
-        }).then((response) => response.json().then((data) => window.wimsNotice?.(data.msg || "Password reset complete.", response.ok ? "success" : "error")));
+        openAuthModal({
+            title: "Create new password",
+            text: "Choose a new password for your WIMPS account.",
+            label: "New password",
+            placeholder: "At least 6 characters",
+            action: "reset",
+            inputType: "password",
+            buttonText: "Update password"
+        });
     }
 
     const DEMO_USERS = {};
@@ -104,6 +184,11 @@
             }
 
             try {
+                const submitButton = loginForm.querySelector("button[type='submit']");
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = "Logging in...";
+                }
                 const res = await fetch(`${API_BASE}/auth/login`, {
                     method: "POST",
                     headers: {
@@ -165,6 +250,12 @@
 
                 console.error(err);
                 window.wimsAlert("The server is unavailable right now.");
+            } finally {
+                const submitButton = loginForm.querySelector("button[type='submit']");
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Login";
+                }
             }
         });
     }
